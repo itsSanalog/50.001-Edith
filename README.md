@@ -1,8 +1,8 @@
 # 50.001 1D Project - Group 42: EDITH
 
 ## Group Members
-| Name                            | ID      |
-| :------------------------------ | :-----: |
+| Name                            | ID      | Roles    |
+| :------------------------------ | :-----: | :------: |
 | Lim Donggeon                    | 1007068 |
 | Vancence Ho                     | 1007239 |
 | Douglas Tan                     | 1006656 |
