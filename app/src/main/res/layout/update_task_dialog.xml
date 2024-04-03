@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_marginHorizontal="10dp"
+    android:padding="16dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardElevation="10dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/titleTaskTxt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="Update Task"
+            android:textStyle="bold"
+            android:textSize="24sp">
+        </TextView>
+
+        <View
+            android:id="@+id/viewHLine"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:layout_below="@+id/titleTaskTxt"
+            android:background="@color/black">
+        </View>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/viewHLine"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginVertical="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editTaskTitleLayout"
+                style="@style/Widget.Design.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter task title">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTaskTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="?actionBarSize"
+                    android:background="#EAE4E8"
+                    android:inputType="text">
+                </com.google.android.material.textfield.TextInputEditText>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editTaskDescriptionLayout"
+                style="@style/Widget.Design.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter task decription">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editTaskDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#EAE4E8"
+                    android:gravity="top|start"
+                    android:inputType="textMultiLine"
+                    android:lines="5"
+                    android:maxLines="5">
+                </com.google.android.material.textfield.TextInputEditText>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/updateTaskButton"
+                android:layout_width="wrap_content"
+                android:layout_height="?actionBarSize"
+                android:layout_gravity="center"
+                android:layout_marginTop="4dp"
+                android:backgroundTint="@color/spacegrey"
+                android:text="UPDATE"
+                android:textSize="20sp">
+            </Button>
+        </LinearLayout>
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

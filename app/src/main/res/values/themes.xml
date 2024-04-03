@@ -1,0 +1,43 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Edith" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="fontFamily">@font/circular</item>
+    </style>
+
+    <!-- Styling for toolbar -->
+    <style name="ToolbarTitleTextApp" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="android:textSize">30dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:fontFamily">@font/circular</item>
+    </style>
+
+    <!-- Styling for Circular Floating Button -->
+    <style name="CircleShapeOverlay">
+        <item name="cornerSize">50%</item>
+    </style>
+    <style name="Theme.Edith" parent="Base.Theme.Edith" />
+    
+    <!-- Styling for TODO Card -->
+    <style name="CardViewStyle" parent="Widget.Material3.CardView.Outlined">
+        <item name="shapeAppearanceOverlay"></item>
+    </style>
+    <style name="CutShape" parent="ShapeAppearance.Material3.MediumComponent">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">12dp</item>
+    </style>
+    
+    <!-- Styling for Dialog Card -->
+    <style name="Widget.Design.TextInputLayout" parent="Widget.Material3.TextInputLayout.FilledBox">
+        <item name="shapeAppearance">@style/CutShape</item>
+        <item name="hintTextColor">@color/spacegrey</item>
+        <item name="boxStrokeColor">@color/black</item>
+        <item name="endIconMode">clear_text</item>
+        <item name="errorIconDrawable">@null</item>
+        <item name="errorEnabled">true</item>
+        <item name="android:textColor">@color/spacegrey</item>
+        <item name="android:textCursorDrawable">@color/black</item>
+        <item name="startIconTint">@color/black</item>
+    </style>
+</resources>
