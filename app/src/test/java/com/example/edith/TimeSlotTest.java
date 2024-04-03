@@ -1,6 +1,8 @@
 package com.example.edith;
 
-import com.blazeit.edith.models.TimeSlot;
+import static org.junit.Assert.assertEquals;
+
+import com.example.edith.models.TimeSlot;
 
 import org.junit.Test;
 

@@ -2,9 +2,9 @@ package com.example.edith;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.blazeit.edith.algorithms.FindFirstSlotForTask;
-import com.blazeit.edith.models.CalendarEntity;
-import com.blazeit.edith.models.TimeSlot;
+import com.example.edith.algorithms.FindFirstSlotForTask;
+import com.example.edith.models.CalendarEntity;
+import com.example.edith.models.TimeSlot;
 
 import org.junit.jupiter.api.Test;
 

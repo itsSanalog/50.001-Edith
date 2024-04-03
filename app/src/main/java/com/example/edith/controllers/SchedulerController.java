@@ -1,13 +1,13 @@
 package com.example.edith.controllers;
 
-import com.blazeit.edith.algorithms.CanCalendarEntityFitInSlots;
-import com.blazeit.edith.algorithms.FindAvailableSlots;
-import com.blazeit.edith.algorithms.FindFirstSlotForTask;
-import com.blazeit.edith.algorithms.FindRescheduleSlotForTask;
-import com.blazeit.edith.models.CalendarEntity;
-import com.blazeit.edith.models.Task;
-import com.blazeit.edith.models.TaskRequest;
-import com.blazeit.edith.models.TimeSlot;
+import com.example.edith.algorithms.CanCalendarEntityFitInSlots;
+import com.example.edith.algorithms.FindAvailableSlots;
+import com.example.edith.algorithms.FindFirstSlotForTask;
+import com.example.edith.algorithms.FindRescheduleSlotForTask;
+import com.example.edith.models.CalendarEntity;
+import com.example.edith.models.Task;
+import com.example.edith.models.TaskRequest;
+import com.example.edith.models.TimeSlot;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;

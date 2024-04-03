@@ -1,6 +1,6 @@
 package com.example.edith.models;
 
-import com.blazeit.edith.controllers.SchedulerController;
+import com.example.edith.controllers.SchedulerController;
 
 import java.time.ZonedDateTime;
 

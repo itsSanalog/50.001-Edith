@@ -3,9 +3,9 @@ package com.example.edith;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import com.blazeit.edith.algorithms.CanCalendarEntityFitInSlots;
-import com.blazeit.edith.models.CalendarEntity;
-import com.blazeit.edith.models.TimeSlot;
+import com.example.edith.algorithms.CanCalendarEntityFitInSlots;
+import com.example.edith.models.CalendarEntity;
+import com.example.edith.models.TimeSlot;
 
 import org.junit.Test;
 
