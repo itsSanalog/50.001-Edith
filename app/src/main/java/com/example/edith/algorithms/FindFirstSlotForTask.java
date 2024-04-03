@@ -2,10 +2,10 @@ package com.example.edith.algorithms;
 
 import android.util.Log;
 
-import com.blazeit.edith.controllers.SchedulerController;
-import com.blazeit.edith.models.CalendarEntity;
-import com.blazeit.edith.models.Task;
-import com.blazeit.edith.models.TimeSlot;
+import com.example.edith.controllers.SchedulerController;
+import com.example.edith.models.CalendarEntity;
+import com.example.edith.models.Task;
+import com.example.edith.models.TimeSlot;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;

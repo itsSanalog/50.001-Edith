@@ -1,7 +1,7 @@
 package com.example.edith.algorithms;
 
-import com.blazeit.edith.models.Task;
-import com.blazeit.edith.models.TimeSlot;
+import com.example.edith.models.Task;
+import com.example.edith.models.TimeSlot;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;

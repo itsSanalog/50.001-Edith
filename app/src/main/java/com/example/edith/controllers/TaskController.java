@@ -1,7 +1,7 @@
 package com.example.edith.controllers;
 
-import com.blazeit.edith.models.CalendarEntity;
-import com.blazeit.edith.models.TaskRequest;
+import com.example.edith.models.CalendarEntity;
+import com.example.edith.models.TaskRequest;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
