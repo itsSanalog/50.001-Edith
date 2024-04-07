@@ -60,7 +60,6 @@ public class FindFirstSlotForTask {
                 }
                 if (!isPlaced) {
                     for (int i = 0; i < holdEntities.size(); i++) {
-
                         if (holdEntities.get(i).getDurationMinutes() < duration) {
                             break;
                         }

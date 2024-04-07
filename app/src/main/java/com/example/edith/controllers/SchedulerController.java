@@ -30,8 +30,9 @@ public class SchedulerController {
         ZonedDateTime deadline = taskRequest.getDeadline();
         // Get the duration from the task request
         int duration = taskRequest.getDuration();
-        // Get the existing entities from the local storage
-        ArrayList<CalendarEntity> existingEntities = new ArrayList<>(); // Take from LES
+        // Get the existing entities from LocalEntityStorage
+        ArrayList<CalendarEntity> existingEntities = new ArrayList<>();
+
         // Use the FindAvailableSlots algorithm to find all available slots that can accommodate the task
         ArrayList<TimeSlot> availableSlots = FindAvailableSlots.getAvailableSlots(existingEntities, duration, deadline);
         // Create an instance of FindFirstSlotForTask

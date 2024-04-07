@@ -1,13 +1,14 @@
 {
   "project_info": {
-    "project_number": "837746879107",
-    "project_id": "edith-aa019",
-    "storage_bucket": "edith-aa019.appspot.com"
+    "project_number": "904936402990",
+    "project_id": "edith-4f207",
+    "firebase_url": "https://edith-4f207-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "storage_bucket": "edith-4f207.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:837746879107:android:28960c71c48f83b68989b6",
+        "mobilesdk_app_id": "1:904936402990:android:d0e879cda24b01473eefbf",
         "android_client_info": {
           "package_name": "com.example.edith"
         }
@@ -15,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDr9A_OV2hQeDlngln3rM7qriVN9tMxA3Q"
+          "current_key": "AIzaSyBMbLkF_N3cTi8J65lPBUZgUEWD7dYanJU"
         }
       ],
       "services": {
