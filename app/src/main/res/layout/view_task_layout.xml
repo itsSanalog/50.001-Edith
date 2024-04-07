@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,12 +16,29 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="8dp">
 
+
+
         <LinearLayout
+            android:id="@+id/checkLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true">
+
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/black">
+            </com.google.android.material.checkbox.MaterialCheckBox>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/textLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="false"
             android:layout_centerVertical="true"
-            android:layout_toStartOf="@+id/editDeleteLayout"
+            android:layout_toEndOf="@+id/checkLayout"
             android:orientation="vertical">
 
             <TextView
