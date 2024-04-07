@@ -70,6 +70,9 @@ dependencies {
     // For Circular Create Event Button
     implementation("com.google.android.material:material:1.11.0")
 
+    // For RecyclerViewSwipe Decorator
+    implementation("it.xabaras.android:recyclerview-swipedecorator:1.4")
+
     // For Expandable Material Card View
     //implementation("com.thoughtbot:expandablerecyclerview:1.4")
 }

@@ -1,6 +1,7 @@
 package com.example.edith.fragments;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,18 +20,23 @@ import android.widget.TextView;
 
 import com.example.edith.R;
 import com.example.edith.activities.MainActivity;
+//import com.example.edith.activities.TouchHelper;
 import com.example.edith.adapters.TaskAdapter;
+import com.example.edith.models.Task;
 import com.example.edith.models.ToDoModel;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import org.testng.reporters.jq.Main;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -43,6 +50,8 @@ public class todoList extends Fragment {
     private FirebaseFirestore firestore;
     private TaskAdapter adapter;
     private List<ToDoModel> list;
+    private Query query;
+    private ListenerRegistration listenerRegistration;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -98,7 +107,6 @@ public class todoList extends Fragment {
         adapter = new TaskAdapter((FragmentActivity) getActivity(), list);
         recyclerView.setAdapter(adapter);
         showData();
-        //recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
 
@@ -119,11 +127,17 @@ public class todoList extends Fragment {
         return rootView;
     }
 
-    private void showData(){
-        firestore.collection("tasks").addSnapshotListener(new EventListener<QuerySnapshot>() {
+    public TaskAdapter getAdapter(){
+        return adapter;
+    }
+
+    public void showData(){
+        // Query to get the data from the firestore
+        firestore.collection("tasks").orderBy("orderDate", Query.Direction.ASCENDING)
+        .addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                for (DocumentChange documentChange : value.getDocumentChanges()){
+                for (DocumentChange documentChange : value.getDocumentChanges()) {
                     if (documentChange.getType() == DocumentChange.Type.ADDED) {
                         String id = documentChange.getDocument().getId();
                         ToDoModel toDoModel = documentChange.getDocument().toObject(ToDoModel.class).withId(id);
@@ -132,7 +146,6 @@ public class todoList extends Fragment {
                         adapter.notifyDataSetChanged();
                     }
                 }
-                Collections.reverse(list);
             }
         });
     }
