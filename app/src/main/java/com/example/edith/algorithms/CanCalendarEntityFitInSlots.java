@@ -13,7 +13,8 @@ public class CanCalendarEntityFitInSlots {
     public static boolean canFit(ArrayList<TimeSlot> availableSlots, CalendarEntity calendarEntity){
         boolean canFit = false;
         for (TimeSlot slot : availableSlots) {
-            if (calendarEntity.getStartTime().isAfter(slot.getStartTime()) && calendarEntity.getEndTime().isBefore(slot.getEndTime())) {
+            if (calendarEntity.getTimeSlot().startTimeIsAfterTimeslot(slot) &&
+                    calendarEntity.getTimeSlot().startTimeIsBeforeTimeslot(slot)) {
                 canFit = true;
                 break;
             }

@@ -7,15 +7,19 @@ import com.example.edith.models.CalendarEntity;
 import com.example.edith.models.Task;
 import com.example.edith.models.TimeSlot;
 
-import java.time.ZonedDateTime;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 
 
 public class FindFirstSlotForTask {
     public FindFirstSlotForTask() {
     }
-    public static ArrayList<CalendarEntity> find(ArrayList<TimeSlot> availableSlots, int duration, ZonedDateTime deadline, String taskName, ArrayList<CalendarEntity> calendarEntities) {
-        ZonedDateTime now = ZonedDateTime.now();
+    public static ArrayList<CalendarEntity> find(ArrayList<TimeSlot> availableSlots, long duration, String deadline, String taskName, ArrayList<CalendarEntity> calendarEntities) throws ParseException {
+        Instant now = Instant.now();
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if (availableSlots == null) {
             Log.d("FindFirstSlotForTask","no available slots");
             return null;
@@ -25,7 +29,7 @@ public class FindFirstSlotForTask {
             for (int i = 0; i < availableSlots.size(); i++) {
                 TimeSlot availableSlot = availableSlots.get(i);
                 if (availableSlot.getDuration() <= duration) {
-                    CalendarEntity newCalendarEntity = new CalendarEntity(taskName, availableSlot.getStartTime(), availableSlot.getStartTime().plusMinutes(availableSlot.getDuration()));
+                    CalendarEntity newCalendarEntity = new CalendarEntity(taskName, availableSlot.getStartTime(), availableSlot.getEndTime());
                     rescheduledCalendarEntities.add(newCalendarEntity);
                     return rescheduledCalendarEntities;
                 }
@@ -45,10 +49,20 @@ public class FindFirstSlotForTask {
             for (CalendarEntity holdEntity : holdEntities) {
                 boolean isPlaced = false;
                 for (CalendarEntity nonTaskEntity : calendarEntities) {
-                    if (nonTaskEntity.getStartTime().isAfter(now) && nonTaskEntity.getEndTime().isBefore(deadline)) {
-                        ZonedDateTime proposedEndTime = nonTaskEntity.getStartTime().plusMinutes(holdEntity.getDurationMinutes());
-                        if (proposedEndTime.isBefore(nonTaskEntity.getEndTime())) {
-                            // The holdEntity can be placed in the tempEntity slot
+                    if (nonTaskEntity.getTimeSlot().startTimeIsAfterTime(df.format(now)) && nonTaskEntity.getTimeSlot().startTimeIsBeforeTime(df.format(deadline))) {
+                        String proposedEndTime = null;
+                        try {
+                            proposedEndTime = df.format(df.parse(nonTaskEntity.getStartTime()).getTime()+ holdEntity.getDurationMinutes());
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                        try {
+                            if (df.parse(proposedEndTime).getTime() < df.parse(nonTaskEntity.getEndTime()).getTime())
+                            nonTaskEntity.getEndTime();
+                        } catch (ParseException e) {
+                            throw new RuntimeException(e);
+                        }
+                        // The holdEntity can be placed in the tempEntity slot
                             holdEntity.setEndTime(proposedEndTime);
                             calendarEntities.add(holdEntity);
                             // Update the start time of the tempEntity to reflect the placement of the holdEntity
@@ -57,14 +71,14 @@ public class FindFirstSlotForTask {
                             break;
                         }
                     }
-                }
+
                 if (!isPlaced) {
                     for (int i = 0; i < holdEntities.size(); i++) {
                         if (holdEntities.get(i).getDurationMinutes() < duration) {
                             break;
                         }
                         if (holdEntities.get(i).isReschedulable()) {
-                            CalendarEntity newCalendarEntity = new CalendarEntity(taskName, holdEntities.get(i).getStartTime(), holdEntities.get(i).getStartTime().plusMinutes(Integer.parseInt(String.valueOf(holdEntities.get(i).getDurationMinutes()))));
+                            CalendarEntity newCalendarEntity = new CalendarEntity(taskName, holdEntities.get(i).getStartTime(), df.format(df.parse(holdEntities.get(i).getStartTime()).getTime() + holdEntities.get(i).getDurationMinutes()));
                             rescheduledCalendarEntities.add(newCalendarEntity);
                             rescheduledCalendarEntities.add(SchedulerController.rescheduleTaskRequest((Task) holdEntities.get(i)));
                             break;

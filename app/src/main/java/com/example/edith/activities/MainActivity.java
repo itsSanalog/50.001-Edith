@@ -20,6 +20,8 @@ import android.view.MenuItem;
 import com.example.edith.R;
 import com.example.edith.adapters.ViewPagerAdapter;
 import com.example.edith.fragments.BottomFragment;
+import com.example.edith.models.CalendarEntity;
+import com.example.edith.models.FirebaseOperations;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -35,11 +37,20 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Map;
+
+
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public DrawerLayout drawerLayout;
     public ActionBarDrawerToggle actionBarDrawerToggle;
+    DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private ArrayList<CalendarEntity> calendarEntities;
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -104,27 +115,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-
+        // Initialize Firebase
         FirebaseApp.initializeApp(this);
         DatabaseReference mRootDatabaseRef = FirebaseDatabase.getInstance().getReference();
-        final String SAMPLE_NODE = "pokemon";
-        mRootDatabaseRef.child(SAMPLE_NODE).setValue("Pikachu");
 
-        // Read from the database
-        mRootDatabaseRef.addValueEventListener(new ValueEventListener() {
+        // Write a test entity to Firebase
+        CalendarEntity entity = new CalendarEntity("Test", df.format(Instant.now().toEpochMilli()), df.format(Instant.now().toEpochMilli()));
+        //FirebaseOperations.createEntity(entity);
+
+        // Read entities from Firebase
+        FirebaseOperations.read(new FirebaseOperations.OnDataLoadedListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                Map<String, Object> map = (Map<String, Object>) dataSnapshot.getValue();
-                Log.d(TAG, "Value is: " + map);
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
+            public void onDataLoaded(ArrayList<CalendarEntity> entities) {
+                calendarEntities = entities;
+                // Handle the loaded entities here
+                Log.d(TAG, "onCreate: " + entities.get(0).getEntityTitle());
+                Log.d(TAG, "onCreate: " + calendarEntities.get(0).getEntityTitle());
+
             }
         });
+
+        // Update an entity in Firebase
+        //CalendarEntity entity2 = new CalendarEntity("Test2", df.format(Instant.now().toEpochMilli()), df.format(Instant.now().toEpochMilli()));
+        //entity2.setDescription("Updated description");
+        //FirebaseOperations.update(entity2);
 
     }
 

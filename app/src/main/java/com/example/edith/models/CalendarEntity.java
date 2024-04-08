@@ -1,12 +1,15 @@
 package com.example.edith.models;
 
-import java.time.ZonedDateTime;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.UUID;
-import java.util.logging.Formatter;
+import java.util.zip.DataFormatException;
 
 public class CalendarEntity {
     private final String entityID;
-    private ZonedDateTime createdDateTime; //Mandatory
+    private long createdDateTime; //Mandatory
     private String entityTitle; //Mandatory
     private int durationMinutes; //Mandatory
     private TimeSlot timeSlot; //Mandatory
@@ -22,7 +25,7 @@ public class CalendarEntity {
     public boolean isScheduled() {
         return isScheduled;
     }
-    public boolean isReschedulable() {
+    public boolean isReschedulable() throws ParseException {
         //Not reschedulable by default
         return false;
     }
@@ -30,18 +33,18 @@ public class CalendarEntity {
     public CalendarEntity() {
         this.entityID = UUID.randomUUID().toString();
     };
-    public CalendarEntity(String entityTitle, ZonedDateTime startTime, ZonedDateTime endTime) {
-        this.createdDateTime = ZonedDateTime.now();
+    public CalendarEntity(String entityTitle, String startTime, String endTime) {
+        this.createdDateTime = Instant.now().getEpochSecond();
         this.entityTitle = entityTitle;
         this.timeSlot = new TimeSlot(startTime,endTime);
         this.entityID = UUID.randomUUID().toString();
     }
 
     //Getter methods
-    public ZonedDateTime getStartTime() {
+    public String getStartTime() {
         return timeSlot.getStartTime();
     }
-    public ZonedDateTime getEndTime() {
+    public String getEndTime() {
         return timeSlot.getEndTime();
     }
 
@@ -49,14 +52,14 @@ public class CalendarEntity {
         return entityTitle;
     }
 
-    public void setEndTime(ZonedDateTime zonedDateTime) {
-        timeSlot.setEndTime(zonedDateTime);
+    public void setEndTime(String dateTime) {
+        timeSlot.setEndTime(dateTime);
     }
     public int getDurationMinutes() {
         return (int) timeSlot.getDuration();
     }
-    public ZonedDateTime getCreatedDateTime() {
-        return createdDateTime;
+    public String getCreatedDateTime() {
+        return Instant.ofEpochSecond(createdDateTime).toString();
     }
     public String getDescription() {
         return description;
@@ -70,15 +73,16 @@ public class CalendarEntity {
     public String getType() {
         return "Entity";
     }
-
-
+    public TimeSlot getTimeSlot() {
+        return timeSlot;
+    }
 
     //Setter methods to update
-    public void setStartTime(ZonedDateTime startTime) {
+    public void setStartTime(String startTime) {
         timeSlot.setStartTime(startTime);
     }
-    public void setCreatedDateTime(ZonedDateTime createdDateTime) {
-        this.createdDateTime = createdDateTime;
+    public void setCreatedDateTime(String createdDateTime) {
+        this.createdDateTime = Instant.parse(createdDateTime).getEpochSecond();
     }
     public void setDurationMinutes(int durationMinutes) {
         this.durationMinutes = durationMinutes;
@@ -95,5 +99,6 @@ public class CalendarEntity {
     public void setEntityTitle(String title) {
         this.entityTitle = title;
     }
+
 
 }

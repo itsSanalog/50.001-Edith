@@ -1,21 +1,21 @@
 package com.example.edith.models;
 
-import java.time.ZonedDateTime;
+
 
 public class TaskRequest {
     private String entityName;
-    private ZonedDateTime deadline;
-    private int duration;
-    public TaskRequest(String entityName, ZonedDateTime deadline, int duration) {
+    private String deadline;
+    private long duration;
+    public TaskRequest(String entityName, String deadline, long duration) {
         this.entityName = entityName;
         this.deadline = deadline;
         this.duration = duration;
     }
 
-    public ZonedDateTime getDeadline() {
+    public String getDeadline() {
         return deadline;
     }
-    public int getDuration() {
+    public long getDuration() {
         return duration;
     }
 

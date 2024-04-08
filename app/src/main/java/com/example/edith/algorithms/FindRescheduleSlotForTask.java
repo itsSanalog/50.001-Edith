@@ -3,7 +3,9 @@ package com.example.edith.algorithms;
 import com.example.edith.models.Task;
 import com.example.edith.models.TimeSlot;
 
-import java.time.ZonedDateTime;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 /**
@@ -11,6 +13,7 @@ import java.util.ArrayList;
  * It takes into account available time slots, the desired duration of the task, and a deadline.
  */
 public class FindRescheduleSlotForTask {
+    static final DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public FindRescheduleSlotForTask() {
     }
@@ -26,8 +29,13 @@ public class FindRescheduleSlotForTask {
         long duration = task.getDurationMinutes();
         for (TimeSlot slot : availableSlots) {
             if (slot.getDuration() >= duration) {
-                ZonedDateTime startTime = slot.getStartTime();
-                ZonedDateTime endTime = startTime.plusMinutes(duration);
+                String startTime = slot.getStartTime();
+                String endTime = null;
+                try {
+                    endTime = df.format(df.parse(startTime).getTime()+duration*60);
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
                 task.setStartTime(startTime);
                 task.setEndTime(endTime);
                 return task;

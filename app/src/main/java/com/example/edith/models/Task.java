@@ -1,20 +1,19 @@
 package com.example.edith.models;
 
-
-
 import com.example.edith.controllers.SchedulerController;
 
+import java.text.ParseException;
 import java.time.ZonedDateTime;
 
 public class Task extends CalendarEntity {
     private boolean isCompleted;
     private boolean isOverdue;
-    private ZonedDateTime deadline;
+    private String deadline;
 
-    public Task(String taskTitle, ZonedDateTime startTime, ZonedDateTime endTime) {
+    public Task(String taskTitle, String startTime, String endTime) {
         super(taskTitle, startTime, endTime);
     }
-    public ZonedDateTime getDeadline() {
+    public String getDeadline() {
         return deadline;
     }
     @Override
@@ -22,7 +21,7 @@ public class Task extends CalendarEntity {
         return "Task";
     }
     @Override
-    public boolean isReschedulable() {
+    public boolean isReschedulable() throws ParseException {
         return SchedulerController.checkIfTaskIsReschedulable(this);
     }
 
@@ -44,6 +43,6 @@ public class Task extends CalendarEntity {
     }
 
     public void setDeadline(ZonedDateTime deadline) {
-        this.deadline = deadline;
+        this.deadline = deadline.toString();
     }
 }

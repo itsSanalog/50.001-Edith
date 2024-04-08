@@ -3,10 +3,14 @@ package com.example.edith.algorithms;
 import com.example.edith.models.CalendarEntity;
 import com.example.edith.models.TimeSlot;
 
-import java.time.ZonedDateTime;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 
 public class FindAvailableSlots {
+    static DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public FindAvailableSlots() {
     }
@@ -18,18 +22,18 @@ public class FindAvailableSlots {
      *
      * @return An ArrayList of TimeSlot objects representing all available time slots.
      */
-    public static ArrayList<TimeSlot> getAvailableSlots(ArrayList<CalendarEntity> existingEntities, int duration, ZonedDateTime deadline) {
+    public static ArrayList<TimeSlot> getAvailableSlots(ArrayList<CalendarEntity> existingEntities, long duration, String deadline) throws ParseException {
         ArrayList<TimeSlot> availableSlots = new ArrayList<>();
-        ZonedDateTime currentTime = ZonedDateTime.now();
+        Instant currentTime = Instant.now();
 
-        while (currentTime.plusMinutes(duration).isBefore(deadline)) {
-            TimeSlot potentialSlot = new TimeSlot(currentTime, duration);
+        while (currentTime.plusSeconds(duration*60).isBefore(Instant.ofEpochSecond(df.parse(deadline).getTime()))) {
+            TimeSlot potentialSlot = new TimeSlot(df.format(currentTime), duration);
 
             if (isSlotAvailable(potentialSlot, existingEntities)) {
                 availableSlots.add(potentialSlot);
             }
 
-            currentTime = currentTime.plusMinutes(duration);
+            currentTime = currentTime.plusSeconds(duration*60);
         }
 
         // Combine adjacent slots
@@ -59,8 +63,8 @@ public class FindAvailableSlots {
      */
     public static boolean isSlotAvailable(TimeSlot potentialSlot, ArrayList<CalendarEntity> existingEntities) {
         for (CalendarEntity existingEntity : existingEntities) {
-            if (existingEntity.getStartTime().isBefore(potentialSlot.getEndTime()) &&
-                    existingEntity.getEndTime().isAfter(potentialSlot.getStartTime())) {
+            if (existingEntity.getTimeSlot().startTimeIsBeforeTimeslot(potentialSlot) &&
+                    existingEntity.getTimeSlot().startTimeIsAfterTimeslot(potentialSlot)) {
                 return false;
             }
         }
