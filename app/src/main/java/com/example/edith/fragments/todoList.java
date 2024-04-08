@@ -5,7 +5,11 @@ import android.graphics.LinearGradient;
 import android.graphics.Shader;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +17,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.edith.R;
+import com.example.edith.activities.MainActivity;
+import com.example.edith.adapters.TaskAdapter;
+import com.example.edith.models.ToDoModel;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.testng.reporters.jq.Main;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,6 +40,11 @@ import com.example.edith.R;
  * create an instance of this fragment.
  */
 public class todoList extends Fragment {
+
+    private RecyclerView recyclerView;
+    private FirebaseFirestore firestore;
+    private TaskAdapter adapter;
+    private List<ToDoModel> list;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -64,17 +89,32 @@ public class todoList extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_todo_list, container, false);
 
+        // Find the RecyclerView in the layout
+        recyclerView = rootView.findViewById(R.id.taskRV);
+        // Find Data Source
+        firestore = FirebaseFirestore.getInstance();
+        list = new ArrayList<>();
+        adapter = new TaskAdapter((FragmentActivity) getActivity(), list);
+        recyclerView.setAdapter(adapter);
+        showData();
+        //recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         TextView hello = rootView.findViewById(R.id.Hello);
-        hello.setText("Hello, Vancence");
-        hello.setTextColor(getResources().getColor(R.color.white));
-        Shader textShader = new LinearGradient(0, 0, hello.getPaint().measureText(hello.getText().toString()),
-                hello.getTextSize(), new int[]{getResources().getColor(R.color.gradientblue),
-                getResources().getColor(R.color.gradientpurple), getResources().getColor(R.color.gradientpink)},
-                null, Shader.TileMode.CLAMP);
-        hello.getPaint().setShader(textShader);
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
+
+
+            String userName = account.getDisplayName();
+            String[] parts = userName.split("\\s+");
+            String firstname = parts[0];
+            hello.setText("Hello " + firstname + "!");
+            hello.setTextColor(getResources().getColor(R.color.white));
+            Shader textShader = new LinearGradient(0, 0, hello.getPaint().measureText(hello.getText().toString()),
+                    hello.getTextSize(), new int[]{getResources().getColor(R.color.gradientblue),
+                    getResources().getColor(R.color.gradientpurple), getResources().getColor(R.color.gradientpink)},
+                    null, Shader.TileMode.CLAMP);
+            hello.getPaint().setShader(textShader);
 
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView intro = rootView.findViewById(R.id.intro);
         intro.setText("Your tasks today <>");
@@ -82,5 +122,23 @@ public class todoList extends Fragment {
 
         // Inflate the layout for this fragment
         return rootView;
+    }
+
+    private void showData() {
+        firestore.collection("tasks").addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                for (DocumentChange documentChange : value.getDocumentChanges()) {
+                    if (documentChange.getType() == DocumentChange.Type.ADDED) {
+                        String id = documentChange.getDocument().getId();
+                        ToDoModel toDoModel = documentChange.getDocument().toObject(ToDoModel.class).withId(id);
+
+                        list.add(toDoModel);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+                Collections.reverse(list);
+            }
+        });
     }
 }
