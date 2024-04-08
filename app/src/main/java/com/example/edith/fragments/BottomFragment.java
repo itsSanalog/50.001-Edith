@@ -167,9 +167,18 @@ public class BottomFragment extends BottomSheetDialogFragment {
                 String taskDesc = taskDescription.getText().toString();
                 String taskDueDate = dueDate;
                 Log.i("BottomFragment", "Task ID:" + id);
-                if (id != null && finalIsUpdate){
+                if (id != null && finalIsUpdate) {
                     firestore.collection("tasks").document(id).update("taskTitle", taskTitle, "taskDescription", taskDesc, "taskDueDate", taskDueDate, "orderDate", orderDate);
                     Toast.makeText(context, "Task Updated", Toast.LENGTH_SHORT).show();
+                    // Notify RecyclerView about the data change
+//                    MainActivity mainActivity = (MainActivity) getActivity();
+//                    if (mainActivity != null) {
+//                        todoList toDoListFragment = mainActivity.getToDoListFragment();
+//                        if (toDoListFragment != null) {
+//                            toDoListFragment.getAdapter().notifyDataSetChanged();
+//                        }
+//                        //((MainActivity) getActivity()).getToDoListFragment().getAdapter().notifyDataSetChanged();
+//                    }
                 }
                 else {
                     if (taskTitle.isEmpty()) {
@@ -191,7 +200,14 @@ public class BottomFragment extends BottomSheetDialogFragment {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(context, "New Task Has Been Added", Toast.LENGTH_SHORT).show();
                                             // Notify RecyclerView about the data change
-                                            ((MainActivity) getActivity()).getToDoListFragment().getAdapter().notifyDataSetChanged();
+                                            MainActivity mainActivity = (MainActivity) getActivity();
+                                            if (mainActivity != null) {
+                                                todoList toDoListFragment = mainActivity.getToDoListFragment();
+                                                if (toDoListFragment != null) {
+                                                    toDoListFragment.getAdapter().notifyDataSetChanged();
+                                                }
+                                            }
+                                            //((MainActivity) getActivity()).getToDoListFragment().getAdapter().notifyDataSetChanged();
                                             dismiss();
                                         } else {
                                             Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_SHORT).show();

@@ -93,7 +93,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.taskDescription.setText(toDoModel.getTaskDescription());
         holder.taskDate.setText("Due On " + toDoModel.getTaskDueDate());
 
-        holder.checkBox.setChecked(toBoolean(toDoModel.getTaskStatus()));
+        boolean isChecked = toBoolean(toDoModel.getTaskStatus());
+        holder.checkBox.setChecked(isChecked);
+
+        //holder.checkBox.setChecked(toBoolean(toDoModel.getTaskStatus()));
+
+        // Apply or remove the strikethrough effect based on the task's status
+        if (isChecked) {
+            holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        } else {
+            holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
+        }
 
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
