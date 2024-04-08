@@ -20,6 +20,8 @@ import com.example.edith.R;
 import com.example.edith.activities.MainActivity;
 import com.example.edith.adapters.TaskAdapter;
 import com.example.edith.models.ToDoModel;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -99,17 +101,20 @@ public class todoList extends Fragment {
         recyclerView.setAdapter(adapter);
         showData();
         //recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-
-
         TextView hello = rootView.findViewById(R.id.Hello);
-        hello.setText("Hello, Vancence");
-        hello.setTextColor(getResources().getColor(R.color.white));
-        Shader textShader = new LinearGradient(0, 0, hello.getPaint().measureText(hello.getText().toString()),
-                hello.getTextSize(), new int[]{getResources().getColor(R.color.gradientblue),
-                getResources().getColor(R.color.gradientpurple), getResources().getColor(R.color.gradientpink)},
-                null, Shader.TileMode.CLAMP);
-        hello.getPaint().setShader(textShader);
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(getActivity());
+
+
+            String userName = account.getDisplayName();
+            String[] parts = userName.split("\\s+");
+            String firstname = parts[0];
+            hello.setText("Hello " + firstname + "!");
+            hello.setTextColor(getResources().getColor(R.color.white));
+            Shader textShader = new LinearGradient(0, 0, hello.getPaint().measureText(hello.getText().toString()),
+                    hello.getTextSize(), new int[]{getResources().getColor(R.color.gradientblue),
+                    getResources().getColor(R.color.gradientpurple), getResources().getColor(R.color.gradientpink)},
+                    null, Shader.TileMode.CLAMP);
+            hello.getPaint().setShader(textShader);
 
         @SuppressLint({"MissingInflatedId", "LocalSuppress"}) TextView intro = rootView.findViewById(R.id.intro);
         intro.setText("Your tasks today <>");
@@ -119,11 +124,11 @@ public class todoList extends Fragment {
         return rootView;
     }
 
-    private void showData(){
+    private void showData() {
         firestore.collection("tasks").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                for (DocumentChange documentChange : value.getDocumentChanges()){
+                for (DocumentChange documentChange : value.getDocumentChanges()) {
                     if (documentChange.getType() == DocumentChange.Type.ADDED) {
                         String id = documentChange.getDocument().getId();
                         ToDoModel toDoModel = documentChange.getDocument().toObject(ToDoModel.class).withId(id);
