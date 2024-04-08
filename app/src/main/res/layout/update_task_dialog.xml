@@ -84,12 +84,27 @@
                 android:id="@+id/updateTaskButton"
                 android:layout_width="wrap_content"
                 android:layout_height="?actionBarSize"
-                android:layout_gravity="center"
+                android:layout_gravity="end"
                 android:layout_marginTop="4dp"
                 android:backgroundTint="@color/spacegrey"
                 android:text="UPDATE"
+                android:textColor="@color/white"
                 android:textSize="20sp">
             </Button>
+
+            <TextView
+                android:id="@+id/updateDueDateTxt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|top"
+                android:layout_marginTop="-55dp"
+                android:text="Set Due Date"
+                android:textSize="22sp"
+                android:textColor="@color/spacegrey"
+                android:drawableRight="@drawable/ic_calendar"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/spacegrey">
+            </TextView>
         </LinearLayout>
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

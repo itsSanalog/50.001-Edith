@@ -15,8 +15,10 @@ import android.widget.Toast;
 import android.view.MenuItem;
 
 import com.example.edith.R;
+import com.example.edith.adapters.TaskAdapter;
 import com.example.edith.adapters.ViewPagerAdapter;
 import com.example.edith.fragments.BottomFragment;
+import com.example.edith.fragments.todoList;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -103,6 +105,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+    }
+
+    public todoList getToDoListFragment(){
+        return (todoList) getSupportFragmentManager().findFragmentByTag("todoList");
     }
 
     // to Override the onOptionsItemSelected()
