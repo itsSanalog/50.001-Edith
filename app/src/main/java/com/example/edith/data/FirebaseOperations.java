@@ -26,14 +26,23 @@ public class FirebaseOperations implements DatabaseOperations {
     // Create final string for Logcat
     private static final String TAG = "FirebaseOperations";
 
-    FirebaseFirestore firestore;
-    CollectionReference taskDatabaseReference;
+    private static FirebaseOperations instance = null;
+    private FirebaseFirestore firestore;
+    private CollectionReference taskDatabaseReference;
 
-
-    public FirebaseOperations(){
+    // Create a private constructor: Singleton Design Pattern
+    private FirebaseOperations(){
         // Initialize the database
         firestore = FirebaseFirestore.getInstance();
         taskDatabaseReference = firestore.collection("tasks");
+    }
+
+    // Create a singleton instance of the class
+    public static FirebaseOperations getInstance(){
+        if (instance == null){
+            instance = new FirebaseOperations();
+        }
+        return instance;
     }
 
     public void addTask(Task task){

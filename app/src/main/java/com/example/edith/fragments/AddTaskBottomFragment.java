@@ -82,7 +82,7 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
         addTaskDate = view.findViewById(R.id.addDueDateTxt);
         addButton = view.findViewById(R.id.addTaskButton);
 
-        DatabaseOperations db = new FirebaseOperations();
+        DatabaseOperations db = FirebaseOperations.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
         boolean isUpdate = false;

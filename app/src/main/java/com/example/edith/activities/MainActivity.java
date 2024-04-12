@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // ToolBar
         Toolbar toolbar = findViewById(R.id.toolbar);
         // RecyclerView
-        DatabaseOperations db = new FirebaseOperations();
+        DatabaseOperations db = FirebaseOperations.getInstance();
 
         recyclerView = findViewById(R.id.taskRV);
         adapter = new TaskAdapter(MainActivity.this, db);

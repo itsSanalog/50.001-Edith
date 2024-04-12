@@ -75,7 +75,7 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
         updateTaskButton = view.findViewById(R.id.updateTaskButton);
 
         // get the database operations
-        db = new FirebaseOperations();
+        db = FirebaseOperations.getInstance();
 
         // get the previous task details
         boolean isUpdate = false;
