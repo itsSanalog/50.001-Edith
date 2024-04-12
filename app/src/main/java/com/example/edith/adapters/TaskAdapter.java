@@ -1,9 +1,9 @@
 package com.example.edith.adapters;
 
-import android.app.AlertDialog;
+import static java.time.format.DateTimeFormatter.ofPattern;
+
 import android.content.Context;
 import android.graphics.Paint;
-import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,40 +11,38 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Button;
+
 import com.example.edith.R;
-import com.example.edith.activities.MainActivity;
-import com.example.edith.fragments.BottomFragment;
-import com.example.edith.models.ToDoModel;
+import com.example.edith.controllers.TaskController;
+import com.example.edith.data.DatabaseOperations;
+import com.example.edith.fragments.AddTaskBottomFragment;
+import com.example.edith.fragments.UpdateTaskBottomFragment;
+import com.example.edith.models.Task;
+import com.example.edith.models.deleteTaskRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.checkerframework.common.returnsreceiver.qual.BottomThis;
-
 import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder>{
 
-    private List<ToDoModel> toDoList;
-    private FragmentActivity toDoActivity;
     private FirebaseFirestore firestore;
+    DatabaseOperations db;
 
     LayoutInflater mInflater;
     Context context;
 
     // Context object is the super class of MainActivity: See the Docs
     // constructor takes in the data class!
-    public TaskAdapter(FragmentActivity toDoActivity, List<ToDoModel> toDoList){
-        this.toDoList = toDoList;
-        this.toDoActivity = toDoActivity;
-        mInflater = LayoutInflater.from( toDoActivity);
+    public TaskAdapter(Context context, DatabaseOperations db){
+        mInflater = LayoutInflater.from(context);
+        this.context = context;
+        this.db = db;
     }
 
     @NonNull
@@ -52,51 +50,54 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         /** this is pretty much standard code so we will leave it here
          *  inflates the xml layout for each list item and is ready for the data to be added */
-        View itemView = mInflater.inflate(R.layout.view_task_layout, parent, false);
-        firestore = FirebaseFirestore.getInstance();
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_task_layout, parent, false);
+        //View itemView = mInflater.inflate(R.layout.view_task_layout, parent, false);
+        //firestore = FirebaseFirestore.getInstance();
         return new TaskViewHolder(itemView, this);
     }
 
-    public Context getContext(){
-        return toDoActivity;
-    }
 
     public void deleteTask(int position){
-        ToDoModel toDoModel = toDoList.get(position);
-        firestore.collection("tasks").document(toDoModel.TaskID).delete();
-        toDoList.remove(position);
+        // position automatically provided by RecyclerView, and should be a list? provided by db
+        Task Task = db.getAllTasks().get(position);
+
+        TaskController taskController = new TaskController();
+        deleteTaskRequest deleteTaskRequest = new deleteTaskRequest(Task.getEntityID());
+        taskController.deleteTask(deleteTaskRequest);
+        //db.removeTask(Task.getEntityID());
         notifyItemRemoved(position);
     }
 
     public void editTask(int position){
-        ToDoModel toDoModel = toDoList.get(position);
+        Task Task = db.getAllTasks().get(position);
 
         Bundle bundle = new Bundle();
-        bundle.putString("taskTitle", toDoModel.getTaskTitle());
-        bundle.putString("taskDescription", toDoModel.getTaskDescription());
-        bundle.putString("taskDueDate", toDoModel.getTaskDueDate());
-        bundle.putString("orderDate", toDoModel.getOrderDate());
-        bundle.putString("taskID", toDoModel.TaskID);
+        bundle.putString("taskTitle", Task.getEntityTitle());
+        bundle.putString("taskDescription", Task.getDescription());
+        // TODO : add back after startTime is converted to String
+        //bundle.putString("taskDueDate", Task.getStartTime());
+        //bundle.putString("orderDate", Task.getOrderDate());
+        bundle.putString("taskID", Task.getEntityID());
 
-        BottomFragment updateTask = new BottomFragment();
+        UpdateTaskBottomFragment updateTask = new UpdateTaskBottomFragment();
         updateTask.setArguments(bundle);
-        updateTask.show(toDoActivity.getSupportFragmentManager(), updateTask.getTag());
-        Log.i("TaskAdapter", "Task ID:" + toDoModel.TaskID);
+        updateTask.show(((FragmentActivity) context).getSupportFragmentManager(), updateTask.getTag());
+        Log.i("TaskAdapter", "Task ID:" + Task.getEntityID());
     }
 
     @NonNull
     @Override
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         //TODO 2 get the data point at position from the data source and assign it to the Viewholder
-        ToDoModel toDoModel = toDoList.get(position);
-        holder.taskName.setText(toDoModel.getTaskTitle());
-        holder.taskDescription.setText(toDoModel.getTaskDescription());
-        holder.taskDate.setText("Due On " + toDoModel.getTaskDueDate());
+        Task Task = db.getAllTasks().get(position);
+        holder.taskName.setText(Task.getEntityTitle());
+        holder.taskDescription.setText(Task.getDescription());
+        holder.taskDate.setText("Do on " + Task.getStartTime());
 
-        boolean isChecked = toBoolean(toDoModel.getTaskStatus());
+        boolean isChecked = Task.isCompleted();
         holder.checkBox.setChecked(isChecked);
 
-        //holder.checkBox.setChecked(toBoolean(toDoModel.getTaskStatus()));
+        //holder.checkBox.setChecked(toBoolean(Task.getTaskStatus()));
 
         // Apply or remove the strikethrough effect based on the task's status
         if (isChecked) {
@@ -109,28 +110,23 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
-                    firestore.collection("tasks").document(toDoModel.TaskID).update("taskStatus", 1);
+                    db.updateTaskStatus(Task.getEntityID(), true);
+                    //firestore.collection("tasks").document(Task.TaskID).update("taskStatus", 1);
                     holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 }
                 else {
-                    firestore.collection("tasks").document(toDoModel.TaskID).update("taskStatus", 0);
+                    db.updateTaskStatus(Task.getEntityID(), false);
+                    //firestore.collection("tasks").document(Task.TaskID).update("taskStatus", 0);
                     holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
             }
         });
-        //holder.getTaskName().setText(data.getTaskName(position));
-        //holder.getTaskDescription().setText(data.getTaskDescription(position));
-        //holder.getTaskDate().setText(data.getTaskDate(position));
-    }
-
-    private boolean toBoolean(int status){
-        return status != 0;
     }
 
     @Override
     public int getItemCount() {
         // return the number of data points
-        return toDoList.size();
+        return db.getAllTasks().size();
     }
 
     static class TaskViewHolder extends RecyclerView.ViewHolder {
@@ -148,7 +144,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             taskDate = itemView.findViewById(R.id.dateTxt);
             deleteTask = itemView.findViewById(R.id.ic_delete);
             editTask = itemView.findViewById(R.id.ic_edit);
-            //taskTime = itemView.findViewById(R.id.taskTime);
             checkBox = itemView.findViewById(R.id.checkBox);
 
             deleteTask.setOnClickListener(new View.OnClickListener() {

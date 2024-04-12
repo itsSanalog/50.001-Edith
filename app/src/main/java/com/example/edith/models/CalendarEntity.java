@@ -102,4 +102,8 @@ public class CalendarEntity {
         this.entityTitle = title;
     }
 
+    public TimeSlot getTimeSlot(){
+        return timeSlot;
+    }
+
 }

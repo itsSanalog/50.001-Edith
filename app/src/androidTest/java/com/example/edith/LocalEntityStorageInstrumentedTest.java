@@ -9,7 +9,6 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import com.example.edith.models.CalendarEntity;
-import com.example.edith.models.LocalEntityStorage;
 
 import org.junit.Before;
 import org.junit.Test;

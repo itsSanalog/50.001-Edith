@@ -5,33 +5,43 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.widget.Toolbar;
-import androidx.viewpager2.widget.ViewPager2;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MenuItem;
 
 import com.example.edith.R;
 import com.example.edith.adapters.TaskAdapter;
-import com.example.edith.adapters.ViewPagerAdapter;
-import com.example.edith.fragments.BottomFragment;
-import com.example.edith.fragments.todoList;
+import com.example.edith.data.DatabaseOperations;
+import com.example.edith.data.FirebaseOperations;
+import com.example.edith.fragments.AddTaskBottomFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public DrawerLayout drawerLayout;
+    public RecyclerView recyclerView;
+    public TaskAdapter adapter;
+    public List<Task> taskList;
     public ActionBarDrawerToggle actionBarDrawerToggle;
 
     @SuppressLint("ResourceAsColor")
@@ -49,23 +59,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         // < finding elements >
+        // TextView for intro
+        TextView hello = findViewById(R.id.Hello);
+        // ToolBar
         Toolbar toolbar = findViewById(R.id.toolbar);
-        TabLayout tabLayout = findViewById(R.id.tabs);
+        // RecyclerView
+        DatabaseOperations db = new FirebaseOperations();
 
-        @SuppressLint({"MissingInflatedId", "LocalSuppress"}) ViewPager2 viewPager2 = findViewById(R.id.view_pager);
+        recyclerView = findViewById(R.id.taskRV);
+        adapter = new TaskAdapter(MainActivity.this, db);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(this);
-        viewPager2.setAdapter(viewPagerAdapter);
         FloatingActionButton fab = findViewById(R.id.fab);
         setSupportActionBar(toolbar);
-
-        // if no default tab items, new TabLayoutMediator to connect tab items to fragments
-        new TabLayoutMediator(tabLayout, viewPager2, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                tab.setText("TAB " + (position + 1));
-            }
-        }).attach();
 
 
         // drawer layout instance to toggle the menu icon back open
@@ -96,19 +103,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+        // Set the intro for hello textview
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(MainActivity.this);
+        String userName = account.getDisplayName();
+        String[] parts = userName.split("\\s+");
+        String firstName = parts[0];
+        hello.setText("Hello " + firstName + "!");
+        hello.setTextColor(R.color.white);
+        Shader textShader = new LinearGradient(0, 0, hello.getPaint()
+                .measureText(hello.getText().toString()), hello.getTextSize(),
+                new int[]{R.color.gradientblue, R.color.gradientpurple, R.color.gradientpink},
+                null, Shader.TileMode.CLAMP);
+        hello.getPaint().setShader(textShader);
+
         // Set the floating action button on click listener
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BottomFragment bottomFragment = new BottomFragment();
+                AddTaskBottomFragment bottomFragment = new AddTaskBottomFragment();
                 bottomFragment.show(getSupportFragmentManager(),bottomFragment.getTag());
             }
         });
 
-    }
-
-    public todoList getToDoListFragment(){
-        return (todoList) getSupportFragmentManager().findFragmentByTag("todoList");
     }
 
     // to Override the onOptionsItemSelected()

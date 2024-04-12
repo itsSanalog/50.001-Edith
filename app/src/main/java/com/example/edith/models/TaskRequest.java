@@ -4,16 +4,19 @@ import java.time.ZonedDateTime;
 
 public class TaskRequest {
     private String entityName;
-    private ZonedDateTime deadline;
+    private String entityDescription;
+    private String taskDeadline;
     private int duration;
-    public TaskRequest(String entityName, ZonedDateTime deadline, int duration) {
+
+    public TaskRequest(String entityName, String entityDescription, String taskDeadline, int duration) {
         this.entityName = entityName;
-        this.deadline = deadline;
+        this.entityDescription = entityDescription;
+        this.taskDeadline = taskDeadline;
         this.duration = duration;
     }
 
-    public ZonedDateTime getDeadline() {
-        return deadline;
+    public String getDeadline() {
+        return taskDeadline;
     }
     public int getDuration() {
         return duration;
