@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -34,14 +35,15 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
 
     public static final String TAG = "UpdateTaskBottomFragment";
 
+    private String id;
     private EditText editTaskTitle;
     private EditText editTaskDescription;
+    private NumberPicker editTaskDuration;
     private TextView updateDueDateText;
     private Button updateTaskButton;
     private DatabaseOperations db;
     private Context context;
     private String dueDateUpdate;
-    private String id;
 
     // constructor: create new instance of UpdateTaskBottomFragment
     public static UpdateTaskBottomFragment newInstance() {
@@ -71,12 +73,18 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
         // get the UI elements
         editTaskTitle = view.findViewById(R.id.editTaskTitle);
         editTaskDescription = view.findViewById(R.id.editTaskDescription);
+        editTaskDuration = view.findViewById(R.id.editDurationPicker);
         updateDueDateText = view.findViewById(R.id.updateDueDateTxt);
         updateTaskButton = view.findViewById(R.id.updateTaskButton);
 
         // get the database operations
         db = FirebaseOperations.getInstance();
 
+        // Configure the editTaskDuration NumberPicker
+        editTaskDuration.setMinValue(1); // Minimum duration
+        editTaskDuration.setMaxValue(120); // Maximum duration
+
+        // TODO: get the previous task details, check with Andrew
         // get the previous task details
         boolean isUpdate = false;
         Bundle bundle;
@@ -158,9 +166,8 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
             public void onClick(View v) {
                 String taskTitle = editTaskTitle.getText().toString();
                 String taskDescription = editTaskDescription.getText().toString();
+                int taskDuration = editTaskDuration.getValue();
                 String taskDueDate = dueDateUpdate;
-                // TODO: include once i edit UI
-                int taskDuration = 0;
                 // TODO: pass the fields to TaskRequest
                 updateTaskRequest updateTaskRequest = new updateTaskRequest(id, taskTitle, taskDescription, taskDueDate, taskDuration);
                 TaskController taskController = new TaskController(db);

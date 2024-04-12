@@ -80,6 +80,25 @@
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/durationTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/spacegrey"
+                android:textStyle="bold"
+                android:text="Duration In Minutes">
+            </TextView>
+
+            <NumberPicker
+                android:id="@+id/editDurationPicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/editTaskDescriptionLayout"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp">
+            </NumberPicker>
+
             <Button
                 android:id="@+id/updateTaskButton"
                 android:layout_width="wrap_content"

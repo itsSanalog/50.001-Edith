@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,16 +44,19 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
 
     public static final String TAG = "AddNewTask";
 
+    private String id = "";
     private EditText addTaskTitle;
     private EditText addTaskDescription;
     private TextView addTaskDate;
     private Button addButton;
-    private FirebaseFirestore firestore;
+    private NumberPicker addDuration;
     private Context context;
     private String dueDate = "";
-    private String orderDate = "";
-    private String id = "";
+
+    // TODO: Do not know if it is necessary
     private String dueDateUpdate = "";
+    private FirebaseFirestore firestore;
+    private String orderDate = "";
     private String orderDateUpdate = "";
 
     private static AddTaskBottomFragment newInstance() {
@@ -80,11 +84,19 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
         addTaskTitle = view.findViewById(R.id.addTaskTitle);
         addTaskDescription = view.findViewById(R.id.addTaskDescription);
         addTaskDate = view.findViewById(R.id.addDueDateTxt);
+        addDuration = view.findViewById(R.id.durationPicker);
         addButton = view.findViewById(R.id.addTaskButton);
 
         DatabaseOperations db = FirebaseOperations.getInstance();
         firestore = FirebaseFirestore.getInstance();
 
+        // Configure the Duration NumberPicker
+        addDuration.setMinValue(1); // Minimum duration
+        addDuration.setMaxValue(120); // Maximum duration
+
+
+        // TODO: Not necessary for AddTaskBottom Fragment check with Andrew
+        // Configuring the Update Task
         boolean isUpdate = false;
         Bundle bundle;
         if (savedInstanceState != null) {
@@ -111,7 +123,7 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
             }
         }
 
-
+        // Configure the Task Title EditText
         addTaskTitle.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -133,7 +145,7 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
                 addButton.setEnabled(s.toString().length() != 0);
             }
         });
-
+        // Configure the Due Date TextView
         addTaskDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,16 +170,17 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
                 datePickerDialog.show();
             }
         });
-
+        // Configure the Add Button
         boolean finalIsUpdate = isUpdate;
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String taskTitle = addTaskTitle.getText().toString();
                 String taskDesc = addTaskDescription.getText().toString();
+                int duration = addDuration.getValue();
                 String taskDueDate = dueDate;
                 // TODO: pass the fields to TaskRequest
-                addTaskRequest addTaskRequest = new addTaskRequest(taskTitle, taskDesc, taskDueDate, 0);
+                addTaskRequest addTaskRequest = new addTaskRequest(taskTitle, taskDesc, taskDueDate, duration);
                 TaskController taskController = new TaskController(db);
                 Log.i(TAG, "Task ID:" + id);
 
