@@ -1,5 +1,7 @@
 package com.example.edith.controllers;
 
+import android.util.Log;
+
 import com.example.edith.algorithms.CanCalendarEntityFitInSlots;
 import com.example.edith.algorithms.FindAvailableSlots;
 import com.example.edith.algorithms.FindFirstSlotForTask;
@@ -33,10 +35,13 @@ public class SchedulerController {
         String deadline = taskRequest.getDeadline();
         // Get the duration from the task request
         int duration = taskRequest.getDuration();
+        Log.d("AlgoDebug", "Duration: " + duration + " Deadline: " + deadline);
         // Get the existing entities from the local storage
         ArrayList<CalendarEntity> existingEntities = databaseOperations.getAllCalendarEntities();
+        Log.d("AlgoDebug", "Existing entities: " + existingEntities.size());
         // Use the FindAvailableSlots algorithm to find all available slots that can accommodate the task
         ArrayList<TimeSlot> availableSlots = FindAvailableSlots.getAvailableSlots(existingEntities, duration, deadline);
+        Log.d("AlgoDebug", "Available slots: " + availableSlots.get(0).getStartTime()+ " - " + availableSlots.get(0).getEndTime());
         // Create an instance of FindFirstSlotForTask
         return FindFirstSlotForTask.find(availableSlots, duration, deadline, taskRequest.getEntityName(), existingEntities);
         // Use the FindFirstSlotForTask algorithm to find the first available slot for the task and return the rescheduled entities

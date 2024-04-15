@@ -34,6 +34,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import android.util.Log;
 
 public class AddTaskBottomFragment extends BottomSheetDialogFragment {
 
@@ -170,6 +171,8 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Log.d("AlgoDebug", "Add Button Clicked 1");
+
                 String taskTitle = addTaskTitle.getText().toString();
                 String taskDesc = addTaskDescription.getText().toString();
                 int duration = addDuration.getValue();
@@ -188,6 +191,7 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
                 } else {
                     // TODO: Convert strings received to Task object and send task controller
                     TaskController.addTask(addTaskRequest);
+                    Log.d("AlgoDebug", "TaskController addTask called");
 
 //                    Map<String, Object> taskMap = new HashMap<>();
 //                    taskMap.put("taskTitle", taskTitle);

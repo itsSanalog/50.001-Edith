@@ -26,14 +26,13 @@ public class FindFirstSlotForTask {
         LocalDateTime deadlineLDT = LocalDateTime.parse(deadline);
         LocalDateTime now = LocalDateTime.now();
         if (availableSlots == null) {
-            Log.d("FindFirstSlotForTask","no available slots");
             return null;
         }
         ArrayList<Task> rescheduledTasks = new ArrayList<>();
         if (!availableSlots.isEmpty()) {
             for (int i = 0; i < availableSlots.size(); i++) {
                 TimeSlot availableSlot = availableSlots.get(i);
-                if (availableSlot.getDuration() <= duration) {
+                if (duration <= availableSlot.getDuration()) {
                     LocalDateTime availableSlotStart = LocalDateTime.parse(availableSlot.getStartTime());
                     Task task = new Task(taskTitle, availableSlot.getStartTime(), availableSlotStart.plusMinutes(availableSlot.getDuration()).toString());
                     rescheduledTasks.add(task);

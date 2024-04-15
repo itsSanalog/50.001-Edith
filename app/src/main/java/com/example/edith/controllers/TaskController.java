@@ -1,5 +1,7 @@
 package com.example.edith.controllers;
 
+import android.util.Log;
+
 import com.example.edith.data.DatabaseOperations;
 import com.example.edith.data.FirebaseOperations;
 import com.example.edith.models.CalendarEntity;
@@ -24,9 +26,12 @@ public class TaskController {
         //Get available slot from scheduler controller
         ArrayList<Task> entitiesToBeUpdated = SchedulerController.addTaskRequest(addTaskRequest);
         //Update entities in firebase
+        Log.d("AlgoDebug", "Entities to be updated: " + entitiesToBeUpdated.size());
+
         for (Task task : entitiesToBeUpdated) {
             //Update entity in firebase
             FirebaseOperations.getInstance().addTask(task);
+            Log.d("AlgoDebug", "Task added to firebase: " + task.getEntityTitle());
         }
     }
 
