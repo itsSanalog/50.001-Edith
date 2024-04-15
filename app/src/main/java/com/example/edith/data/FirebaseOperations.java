@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.IntegerRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.example.edith.models.CalendarEntity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -11,9 +12,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import com.example.edith.models.Task;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -30,12 +35,28 @@ public class FirebaseOperations implements DatabaseOperations {
     private static FirebaseOperations instance = null;
     private FirebaseFirestore firestore;
     private CollectionReference taskDatabaseReference;
+    List<Task> taskList;
+    int size;
 
     // Create a private constructor: Singleton Design Pattern
     private FirebaseOperations(){
         // Initialize the database
         firestore = FirebaseFirestore.getInstance();
         taskDatabaseReference = firestore.collection("tasks");
+
+        // Get all tasks from the database
+        taskDatabaseReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null){
+                    Log.d(TAG, "Error getting tasks: " + error);
+                }
+                Log.d(TAG, "Tasks: " + value);
+                countListItems(value);
+                repopulateList(value);
+                Log.d(TAG, taskList.toString());
+            }
+        });
     }
 
     // Create a singleton instance of the class
@@ -46,6 +67,40 @@ public class FirebaseOperations implements DatabaseOperations {
         return instance;
     }
 
+    // Count List
+    private void countListItems(QuerySnapshot snapshots){
+        size = snapshots.size();
+        Log.d(TAG, "Size: " + size);
+    }
+
+    // Repopulate list
+    @Override
+    public void repopulateList(QuerySnapshot snapshots){
+        taskList = new ArrayList<>();
+
+        if (snapshots != null){
+            taskList.addAll(snapshots.toObjects(Task.class));
+            Log.d("TaskAdapterDB", "Size: " + taskList.size());
+        }
+    }
+
+    // GetTask
+    public Task getTask(int position){
+        Log.i("TaskAdapterDB", taskList.toString());
+        return taskList.get(position);
+    }
+
+    public Task getTask(String id){
+        // Get task from the database
+        Task task =  taskDatabaseReference.document(id).get().getResult().toObject(Task.class);
+        return task;
+    }
+
+    public List<Task> getAllTasks(){
+        return taskList;
+    }
+
+    // AddTask
     public void addTask(Task task){
         Map<String, Object> taskMap = new HashMap<>();
         // Add task to the database
@@ -70,6 +125,26 @@ public class FirebaseOperations implements DatabaseOperations {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.d(TAG, "Task failed to add");
+            }
+        });
+    }
+
+    // RemoveTask
+    @Override
+    public void removeTask(int position) {
+        Task task = taskList.get(position);
+
+        // Remove task from the database
+        taskDatabaseReference.document(task.getEntityID()).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
+                // Log success message
+                Log.d(TAG, "Task removed successfully");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Task failed to remove");
             }
         });
     }
@@ -116,29 +191,6 @@ public class FirebaseOperations implements DatabaseOperations {
                 Log.d(TAG, "Task failed to update");
             }
         });
-    }
-
-
-    public Task getTask(String id){
-        // Get task from the database
-        Task task =  taskDatabaseReference.document(id).get().getResult().toObject(Task.class);
-        return task;
-    }
-
-    public List<Task> getAllTasks(){
-        // Get all tasks from the database
-        final List<Task> tasks = new ArrayList<>();
-        taskDatabaseReference
-                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                for (Task task : queryDocumentSnapshots.toObjects(Task.class)){
-                    tasks.add(task);
-                }
-            }
-
-        });
-        return tasks;
     }
 
     public ArrayList<CalendarEntity> getAllCalendarEntities(){
@@ -197,4 +249,19 @@ public class FirebaseOperations implements DatabaseOperations {
             }
         });
     }
+
+    public int getSize(){
+        if (taskList == null){
+            Log.d("TaskAdapterDB", "Size is 0 ");
+            return 0;
+        }
+        Log.d("TaskAdapterDB", "Size: " + size);
+        return size;
+    }
+
+
+
+
+
+
 }

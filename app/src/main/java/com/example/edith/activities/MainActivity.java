@@ -1,5 +1,6 @@
 package com.example.edith.activities;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
@@ -7,6 +8,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -23,15 +25,21 @@ import com.example.edith.adapters.TaskAdapter;
 import com.example.edith.data.DatabaseOperations;
 import com.example.edith.data.FirebaseOperations;
 import com.example.edith.fragments.AddTaskBottomFragment;
+import com.example.edith.models.Task;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +49,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public DrawerLayout drawerLayout;
     public RecyclerView recyclerView;
     public TaskAdapter adapter;
-    public List<Task> taskList;
     public ActionBarDrawerToggle actionBarDrawerToggle;
+    FirebaseFirestore firestore;
 
     @SuppressLint("ResourceAsColor")
     @Override
@@ -57,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
 
-
         // < finding elements >
         // TextView for intro
         TextView hello = findViewById(R.id.Hello);
@@ -67,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DatabaseOperations db = FirebaseOperations.getInstance();
 
         recyclerView = findViewById(R.id.taskRV);
-        adapter = new TaskAdapter(MainActivity.this, db);
+        RecyclerView.Adapter<TaskAdapter.TaskViewHolder> adapter = new TaskAdapter(MainActivity.this, db);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -123,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 AddTaskBottomFragment bottomFragment = new AddTaskBottomFragment();
-                bottomFragment.show(getSupportFragmentManager(),bottomFragment.getTag());
+                bottomFragment.show(getSupportFragmentManager(), bottomFragment.getTag());
             }
         });
 
@@ -135,15 +142,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // to open and close the navigation
     // drawer when the icon is clicked
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item){
-        if (actionBarDrawerToggle.onOptionsItemSelected(item)){
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item){
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item selected here
         int id = item.getItemId();
 
@@ -155,10 +162,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void logout(View view){
+    public void logout(View view) {
 
         GoogleSignIn.getClient(this,
-                new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build())
+                        new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build())
                 .signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -178,4 +185,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
     }
+
 }

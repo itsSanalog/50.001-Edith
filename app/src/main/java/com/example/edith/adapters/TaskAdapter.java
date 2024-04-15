@@ -26,6 +26,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.List;
+
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder>{
 
     private FirebaseFirestore firestore;
@@ -40,10 +42,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         mInflater = LayoutInflater.from(context);
         this.context = context;
         this.db = db;
+        Log.i("TaskAdapterDB", "TaskAdapter Constructor is : " + db);
     }
 
     @NonNull
     @Override
+    // Tell android what/where your layout for each list item is
+    // Creates an instance of the layout and TaskHolder in memory
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         /** this is pretty much standard code so we will leave it here
          *  inflates the xml layout for each list item and is ready for the data to be added */
@@ -56,7 +61,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     public void deleteTask(int position){
         // position automatically provided by RecyclerView, and should be a list? provided by db
-        Task Task = db.getAllTasks().get(position);
+        Task Task = db.getTask(position);
 
         TaskController taskController = new TaskController();
         deleteTaskRequest deleteTaskRequest = new deleteTaskRequest(Task.getEntityID());
@@ -66,7 +71,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     }
 
     public void editTask(int position){
-        Task Task = db.getAllTasks().get(position);
+        Task Task = db.getTask(position);
 
         Bundle bundle = new Bundle();
         bundle.putString("taskTitle", Task.getEntityTitle());
@@ -82,14 +87,26 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         Log.i("TaskAdapter", "Task ID:" + Task.getEntityID());
     }
 
-    @NonNull
     @Override
+    public int getItemCount() {
+        // return the number of data points
+        Log.d("TaskAdapterDB", "get size from adapter " + db.getSize());
+
+        return db.getSize();
+    }
+
+    @Override
+    // Tell android what data you want to go on which widget in the layout of the list item
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         //TODO 2 get the data point at position from the data source and assign it to the Viewholder
-        Task Task = db.getAllTasks().get(position);
+        Task Task = db.getTask(position);
+        Log.i("TaskAdapter", db.getTask(position).toString());
+        //Log.i("TaskAdapter", "onBindViewHolder: " + Task.getEntityTitle() + " " + Task.getDescription() + " " + Task.getStartTime() + " " + Task.getEntityID() + " " + Task.isCompleted());
         holder.taskName.setText(Task.getEntityTitle());
         holder.taskDescription.setText(Task.getDescription());
         holder.taskDate.setText("Do on " + Task.getStartTime());
+
+        //Log.i("TaskAdapter", "onBindViewHolder: " + Task.getEntityTitle() + " " + Task.getDescription() + " " + Task.getStartTime() + " " + Task.getEntityID() + " " + Task.isCompleted());
 
         boolean isChecked = Task.isCompleted();
         holder.checkBox.setChecked(isChecked);
@@ -120,13 +137,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         });
     }
 
-    @Override
-    public int getItemCount() {
-        // return the number of data points
-        return db.getAllTasks().size();
-    }
 
-    static class TaskViewHolder extends RecyclerView.ViewHolder {
+
+    public static class TaskViewHolder extends RecyclerView.ViewHolder {
         private TextView taskName;
         private TextView taskDescription;
         private TextView taskDate;
