@@ -122,13 +122,27 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|top"
                 android:layout_marginTop="-55dp"
-                android:text="Set Due Date"
+                android:text="Set Date"
                 android:textSize="22sp"
                 android:textColor="@color/spacegrey"
                 android:drawableRight="@drawable/ic_calendar"
                 android:drawablePadding="8dp"
                 android:drawableTint="@color/spacegrey">
             </TextView>
+
+            <TextView
+                android:id="@+id/addDeadlineTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|top"
+                android:text="Set Time"
+                android:textSize="22sp"
+                android:textColor="@color/spacegrey"
+                android:drawableRight="@drawable/icons8_clock"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/spacegrey">
+            </TextView>
+
         </LinearLayout>
     </RelativeLayout>
 </com.google.android.material.card.MaterialCardView>

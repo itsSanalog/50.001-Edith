@@ -40,4 +40,9 @@
         <item name="android:textCursorDrawable">@color/black</item>
         <item name="startIconTint">@color/black</item>
     </style>
+
+    <!-- Styling for TimePicker -->
+    <style name="TimePickerDialogTheme" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorAccent">@color/spacegrey</item>
+    </style>
 </resources>
