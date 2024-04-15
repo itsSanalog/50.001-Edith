@@ -6,6 +6,7 @@ import androidx.annotation.IntegerRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.edith.adapters.TaskAdapter;
 import com.example.edith.models.CalendarEntity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -36,10 +37,11 @@ public class FirebaseOperations implements DatabaseOperations {
     private FirebaseFirestore firestore;
     private CollectionReference taskDatabaseReference;
     List<Task> taskList;
+    private TaskAdapter adapter;
     int size;
 
     // Create a private constructor: Singleton Design Pattern
-    private FirebaseOperations(){
+    public FirebaseOperations(){
         // Initialize the database
         firestore = FirebaseFirestore.getInstance();
         taskDatabaseReference = firestore.collection("tasks");
@@ -55,6 +57,9 @@ public class FirebaseOperations implements DatabaseOperations {
                 countListItems(value);
                 repopulateList(value);
                 Log.d(TAG, taskList.toString());
+                if (adapter != null){
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
     }
@@ -65,6 +70,10 @@ public class FirebaseOperations implements DatabaseOperations {
             instance = new FirebaseOperations();
         }
         return instance;
+    }
+
+    public void setAdapter(TaskAdapter adapter){
+        this.adapter = adapter;
     }
 
     // Count List
@@ -251,17 +260,26 @@ public class FirebaseOperations implements DatabaseOperations {
     }
 
     public int getSize(){
-        if (taskList == null){
-            Log.d("TaskAdapterDB", "Size is 0 ");
-            return 0;
-        }
-        Log.d("TaskAdapterDB", "Size: " + size);
+        taskDatabaseReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (taskList == null) {
+                    taskList = new ArrayList<>();
+                    taskList.addAll(queryDocumentSnapshots.toObjects(Task.class));
+                    Log.d(TAG, "If size taskList == null getSize is :  " + taskList.size());
+                }
+                size = taskList.size();
+                Log.d(TAG, "If size taskList is not null getSize is : " + size);
+
+
+//        if (taskList == null){
+//            repopulateList(taskDatabaseReference.get().getResult());
+//            Log.d(TAG, "If size taskList == null getSize is :  " + size);
+//        }
+//        Log.d(TAG, "If size taskList is not null getSize is : " + size);
+//        return size;
+            }
+        });
         return size;
     }
-
-
-
-
-
-
 }
