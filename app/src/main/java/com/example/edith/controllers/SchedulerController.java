@@ -4,9 +4,11 @@ import com.example.edith.algorithms.CanCalendarEntityFitInSlots;
 import com.example.edith.algorithms.FindAvailableSlots;
 import com.example.edith.algorithms.FindFirstSlotForTask;
 import com.example.edith.algorithms.FindRescheduleSlotForTask;
+import com.example.edith.data.DatabaseOperations;
+import com.example.edith.data.FirebaseOperations;
 import com.example.edith.models.CalendarEntity;
 import com.example.edith.models.Task;
-import com.example.edith.models.TaskRequest;
+import com.example.edith.models.TaskRequests.TaskRequest;
 import com.example.edith.models.TimeSlot;
 
 import java.time.ZonedDateTime;
@@ -25,13 +27,14 @@ public class SchedulerController {
      * @param taskRequest The task request object containing the details of the task such as its duration and deadline.
      * @return An ArrayList of CalendarEntity objects representing the rescheduled entities after the task has been scheduled.
      */
-    public static ArrayList<CalendarEntity> createTaskRequest(TaskRequest taskRequest) {
+    public static ArrayList<Task> addTaskRequest(TaskRequest taskRequest) {
+        DatabaseOperations databaseOperations = FirebaseOperations.getInstance();
         // Get the deadline from the task request
-        ZonedDateTime deadline = taskRequest.getDeadline();
+        String deadline = taskRequest.getDeadline();
         // Get the duration from the task request
         int duration = taskRequest.getDuration();
         // Get the existing entities from the local storage
-        ArrayList<CalendarEntity> existingEntities = new ArrayList<>(); // Take from LES
+        ArrayList<CalendarEntity> existingEntities = databaseOperations.getAllCalendarEntities();
         // Use the FindAvailableSlots algorithm to find all available slots that can accommodate the task
         ArrayList<TimeSlot> availableSlots = FindAvailableSlots.getAvailableSlots(existingEntities, duration, deadline);
         // Create an instance of FindFirstSlotForTask
@@ -39,13 +42,14 @@ public class SchedulerController {
         // Use the FindFirstSlotForTask algorithm to find the first available slot for the task and return the rescheduled entities
     }
     public static Task rescheduleTaskRequest(Task task) {
+        DatabaseOperations databaseOperations = FirebaseOperations.getInstance();
         if (checkIfTaskIsReschedulable(task)) {
             // Get the deadline from the task request
-            ZonedDateTime deadline = task.getDeadline();
+            String deadline = task.getDeadline();
             // Get the duration from the task request
             int duration = task.getDurationMinutes();
             // Get the existing entities from the local storage
-            ArrayList<CalendarEntity> existingEntities = new ArrayList<>(); // Take from LES
+            ArrayList<CalendarEntity> existingEntities = databaseOperations.getAllCalendarEntities();
             // Use the FindAvailableSlots algorithm to find all available slots that can accommodate the task
             // This excludes the existing slot of the task to be rescheduled
             ArrayList<TimeSlot> availableSlots = FindAvailableSlots.getAvailableSlots(existingEntities, duration, deadline);
@@ -55,9 +59,10 @@ public class SchedulerController {
         return null;
     }
     public static boolean checkIfTaskIsReschedulable(Task task) {
-        ZonedDateTime deadline = task.getDeadline();
+        DatabaseOperations databaseOperations = FirebaseOperations.getInstance();
+        String deadline = task.getDeadline();
         int duration = task.getDurationMinutes();
-        ArrayList<CalendarEntity> existingEntities = new ArrayList<>(); //Take from LES
+        ArrayList<CalendarEntity> existingEntities = databaseOperations.getAllCalendarEntities();
         ArrayList<TimeSlot> availableSlots = FindAvailableSlots.getAvailableSlots(existingEntities, duration, deadline);
         return CanCalendarEntityFitInSlots.canFit(availableSlots, task);
     }

@@ -25,8 +25,7 @@ import com.example.edith.R;
 import com.example.edith.controllers.TaskController;
 import com.example.edith.data.DatabaseOperations;
 import com.example.edith.data.FirebaseOperations;
-import com.example.edith.models.Task;
-import com.example.edith.models.updateTaskRequest;
+import com.example.edith.models.TaskRequests.updateTaskRequest;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.Calendar;
@@ -170,11 +169,10 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
                 String taskDueDate = dueDateUpdate;
                 // TODO: pass the fields to TaskRequest
                 updateTaskRequest updateTaskRequest = new updateTaskRequest(id, taskTitle, taskDescription, taskDueDate, taskDuration);
-                TaskController taskController = new TaskController(db);
                 Log.i("UpdateTaskBottomFragment", "Task ID" + id);
                 if (id != null && finalIsUpdate){
                     // TODO: update the task by calling the Task controller passing in the fields
-                    taskController.updateTask(updateTaskRequest);
+                    TaskController.updateTask(updateTaskRequest);
                 }
             }
         });

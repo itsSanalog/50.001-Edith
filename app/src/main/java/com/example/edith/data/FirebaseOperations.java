@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.IntegerRes;
 import androidx.annotation.NonNull;
 
+import com.example.edith.models.CalendarEntity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -117,6 +118,7 @@ public class FirebaseOperations implements DatabaseOperations {
         });
     }
 
+
     public Task getTask(String id){
         // Get task from the database
         Task task =  taskDatabaseReference.document(id).get().getResult().toObject(Task.class);
@@ -137,6 +139,46 @@ public class FirebaseOperations implements DatabaseOperations {
 
         });
         return tasks;
+    }
+
+    public ArrayList<CalendarEntity> getAllCalendarEntities(){
+        // Get all entities from the database
+        final ArrayList<CalendarEntity> calendarEntities = new ArrayList<>();
+        taskDatabaseReference
+                .get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        calendarEntities.addAll(queryDocumentSnapshots.toObjects(Task.class));
+                    }
+
+                });
+        return calendarEntities;
+    }
+
+    public void addCalendarEntity(CalendarEntity calendarEntity){
+        Map<String, Object> calendarEntityMap = new HashMap<>();
+        // Add task to the database
+        calendarEntityMap.put("id", calendarEntity.getEntityID());
+        calendarEntityMap.put("title", calendarEntity.getEntityTitle());
+        calendarEntityMap.put("description", calendarEntity.getDescription());
+        calendarEntityMap.put("priority", calendarEntity.getPriority());
+        calendarEntityMap.put("duration", calendarEntity.getDurationMinutes());
+        calendarEntityMap.put("start_time", calendarEntity.getStartTime());
+        calendarEntityMap.put("end_time", calendarEntity.getEndTime());
+        calendarEntityMap.put("TimeSlot", calendarEntity.getTimeSlot());
+
+        taskDatabaseReference.add(calendarEntityMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+            @Override
+            public void onComplete(@NonNull com.google.android.gms.tasks.Task<DocumentReference> task) {
+                // Log success message
+                Log.d(TAG, "Calendar Entity added successfully");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d(TAG, "Calendar Entity failed to add");
+            }
+        });
     }
 
     @Override

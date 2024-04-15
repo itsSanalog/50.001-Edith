@@ -7,12 +7,15 @@ import java.time.ZonedDateTime;
 public class Task extends CalendarEntity {
     private boolean isCompleted;
     private boolean isOverdue;
-    private ZonedDateTime deadline;
+    private String deadline;
+    public Task() {
+        super(null,null,null);
+    }
 
-    public Task(String taskTitle, ZonedDateTime startTime, ZonedDateTime endTime) {
+    public Task(String taskTitle, String startTime, String endTime) {
         super(taskTitle, startTime, endTime);
     }
-    public ZonedDateTime getDeadline() {
+    public String getDeadline() {
         return deadline;
     }
     @Override
@@ -41,7 +44,7 @@ public class Task extends CalendarEntity {
         this.isOverdue = isOverdue;
     }
 
-    public void setDeadline(ZonedDateTime deadline) {
+    public void setDeadline(String deadline) {
         this.deadline = deadline;
     }
 }

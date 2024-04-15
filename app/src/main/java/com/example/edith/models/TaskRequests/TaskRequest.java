@@ -1,4 +1,4 @@
-package com.example.edith.models;
+package com.example.edith.models.TaskRequests;
 
 import java.time.ZonedDateTime;
 

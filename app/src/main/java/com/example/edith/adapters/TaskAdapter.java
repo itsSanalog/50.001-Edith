@@ -17,17 +17,14 @@ import android.widget.TextView;
 import com.example.edith.R;
 import com.example.edith.controllers.TaskController;
 import com.example.edith.data.DatabaseOperations;
-import com.example.edith.fragments.AddTaskBottomFragment;
 import com.example.edith.fragments.UpdateTaskBottomFragment;
 import com.example.edith.models.Task;
-import com.example.edith.models.deleteTaskRequest;
+import com.example.edith.models.TaskRequests.deleteTaskRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.util.List;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder>{
 

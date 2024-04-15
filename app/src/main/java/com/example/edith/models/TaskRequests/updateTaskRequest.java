@@ -1,6 +1,8 @@
-package com.example.edith.models;
+package com.example.edith.models.TaskRequests;
 
-public class updateTaskRequest extends TaskRequest{
+import com.example.edith.models.TaskRequests.TaskRequest;
+
+public class updateTaskRequest extends TaskRequest {
     private String id;
     private String entityName;
     private String entityDescription;

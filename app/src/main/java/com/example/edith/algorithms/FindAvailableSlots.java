@@ -3,6 +3,7 @@ package com.example.edith.algorithms;
 import com.example.edith.models.CalendarEntity;
 import com.example.edith.models.TimeSlot;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 
@@ -18,12 +19,13 @@ public class FindAvailableSlots {
      *
      * @return An ArrayList of TimeSlot objects representing all available time slots.
      */
-    public static ArrayList<TimeSlot> getAvailableSlots(ArrayList<CalendarEntity> existingEntities, int duration, ZonedDateTime deadline) {
+    public static ArrayList<TimeSlot> getAvailableSlots(ArrayList<CalendarEntity> existingEntities, int duration, String deadline) {
         ArrayList<TimeSlot> availableSlots = new ArrayList<>();
-        ZonedDateTime currentTime = ZonedDateTime.now();
+        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime deadlineLDT = LocalDateTime.parse(deadline);
 
-        while (currentTime.plusMinutes(duration).isBefore(deadline)) {
-            TimeSlot potentialSlot = new TimeSlot(currentTime, duration);
+        while (currentTime.plusMinutes(duration).isBefore(deadlineLDT)) {
+            TimeSlot potentialSlot = new TimeSlot(currentTime.toString(), duration);
 
             if (isSlotAvailable(potentialSlot)) {
                 availableSlots.add(potentialSlot);
@@ -60,8 +62,12 @@ public class FindAvailableSlots {
     public static boolean isSlotAvailable(TimeSlot potentialSlot) {
         ArrayList<CalendarEntity> existingEntities = new ArrayList<>(); // Take from LES
         for (CalendarEntity existingEntity : existingEntities) {
-            if (existingEntity.getStartTime().isBefore(potentialSlot.getEndTime()) &&
-                    existingEntity.getEndTime().isAfter(potentialSlot.getStartTime())) {
+            LocalDateTime existingEntityStart = LocalDateTime.parse(existingEntity.getStartTime());
+            LocalDateTime existingEntityEnd = LocalDateTime.parse(existingEntity.getEndTime());
+            LocalDateTime potentialSlotStart = LocalDateTime.parse(potentialSlot.getStartTime());
+            LocalDateTime potentialSlotEnd = LocalDateTime.parse(potentialSlot.getEndTime());
+            if (existingEntityStart.isBefore(potentialSlotEnd) &&
+                    existingEntityEnd.isAfter(potentialSlotStart)) {
                 return false;
             }
         }

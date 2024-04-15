@@ -5,7 +5,6 @@ import java.util.UUID;
 
 public class CalendarEntity {
     private final String entityID;
-    private ZonedDateTime createdDateTime; //Mandatory
     private String entityTitle; //Mandatory
     private int durationMinutes; //Mandatory
     private TimeSlot timeSlot; //Mandatory
@@ -18,8 +17,7 @@ public class CalendarEntity {
         //Code out logic
         return true;
     }
-    public CalendarEntity(String entityTitle, ZonedDateTime startTime, ZonedDateTime endTime) {
-        this.createdDateTime = ZonedDateTime.now();
+    public CalendarEntity(String entityTitle, String startTime, String endTime) {
         this.entityTitle = entityTitle;
         this.timeSlot = new TimeSlot(startTime,endTime);
         this.entityID = UUID.randomUUID().toString();
@@ -29,10 +27,10 @@ public class CalendarEntity {
         //Figure out how to delete from database
     }
     //Getter methods to access
-    public ZonedDateTime getStartTime() {
+    public String getStartTime() {
         return timeSlot.getStartTime();
     }
-    public ZonedDateTime getEndTime() {
+    public String getEndTime() {
         return timeSlot.getEndTime();
     }
 
@@ -40,8 +38,8 @@ public class CalendarEntity {
         return entityTitle;
     }
 
-    public void setEndTime(ZonedDateTime zonedDateTime) {
-        timeSlot.setEndTime(zonedDateTime);
+    public void setEndTime(String endTime) {
+        timeSlot.setEndTime(endTime);
     }
     //Setter methods to update
     public boolean isReschedulable() {
@@ -54,13 +52,10 @@ public class CalendarEntity {
     public int getDurationMinutes() {
         return (int) timeSlot.getDuration();
     }
-    public void setStartTime(ZonedDateTime startTime) {
+    public void setStartTime(String startTime) {
         timeSlot.setStartTime(startTime);
     }
 
-    public ZonedDateTime getCreatedDateTime() {
-        return createdDateTime;
-    }
 
 
     public String getDescription() {
@@ -72,10 +67,6 @@ public class CalendarEntity {
     }
     public boolean isScheduled() {
         return isScheduled;
-    }
-
-    public void setCreatedDateTime(ZonedDateTime createdDateTime) {
-        this.createdDateTime = createdDateTime;
     }
 
     public void setDurationMinutes(int durationMinutes) {

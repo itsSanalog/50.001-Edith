@@ -1,6 +1,6 @@
-package com.example.edith.models;
+package com.example.edith.models.TaskRequests;
 
-public class addTaskRequest extends TaskRequest{
+public class addTaskRequest extends TaskRequest {
 
     private String taskTitle;
     private String taskDescription;

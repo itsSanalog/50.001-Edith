@@ -3,6 +3,7 @@ package com.example.edith.algorithms;
 import com.example.edith.models.Task;
 import com.example.edith.models.TimeSlot;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 
@@ -26,8 +27,8 @@ public class FindRescheduleSlotForTask {
         long duration = task.getDurationMinutes();
         for (TimeSlot slot : availableSlots) {
             if (slot.getDuration() >= duration) {
-                ZonedDateTime startTime = slot.getStartTime();
-                ZonedDateTime endTime = startTime.plusMinutes(duration);
+                String startTime = slot.getStartTime();
+                String endTime = LocalDateTime.parse(startTime).plusMinutes(duration).toString();
                 task.setStartTime(startTime);
                 task.setEndTime(endTime);
                 return task;

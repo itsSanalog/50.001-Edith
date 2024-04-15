@@ -1,33 +1,34 @@
 package com.example.edith.models;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 public class TimeSlot {
-    private ZonedDateTime startTime;
-    private ZonedDateTime endTime;
+    private String startTime;
+    private String endTime;
     private int duration; //In minutes
-    public TimeSlot(ZonedDateTime startTime, ZonedDateTime endTime) {
+    public TimeSlot(String startTime, String endTime) {
         this.startTime = startTime;
         this.endTime = endTime;
     }
-    public TimeSlot(ZonedDateTime startTime, int duration) {
+    public TimeSlot(String startTime, int duration) {
         this.startTime = startTime;
-        this.endTime = startTime.plusMinutes(duration);
+        this.endTime = LocalDateTime.parse(startTime).plusMinutes(duration).toString();
     }
-    public ZonedDateTime getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
-    public ZonedDateTime getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
     public int getDuration() {
-        return (int) Duration.between(startTime,endTime).toMinutes();
+        return (int) Duration.between(LocalDateTime.parse(startTime),LocalDateTime.parse(endTime)).toMinutes();
     }
-    public void setStartTime(ZonedDateTime startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
-    public void setEndTime(ZonedDateTime endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 

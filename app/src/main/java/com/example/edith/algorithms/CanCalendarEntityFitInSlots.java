@@ -3,6 +3,7 @@ package com.example.edith.algorithms;
 import com.example.edith.models.CalendarEntity;
 import com.example.edith.models.TimeSlot;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class CanCalendarEntityFitInSlots {
@@ -13,7 +14,11 @@ public class CanCalendarEntityFitInSlots {
     public static boolean canFit(ArrayList<TimeSlot> availableSlots, CalendarEntity calendarEntity){
         boolean canFit = false;
         for (TimeSlot slot : availableSlots) {
-            if (calendarEntity.getStartTime().isAfter(slot.getStartTime()) && calendarEntity.getEndTime().isBefore(slot.getEndTime())) {
+            LocalDateTime calendarEntityStart = LocalDateTime.parse(calendarEntity.getStartTime());
+            LocalDateTime calendarEntityEnd = LocalDateTime.parse(calendarEntity.getEndTime());
+            LocalDateTime slotStart = LocalDateTime.parse(slot.getStartTime());
+            LocalDateTime slotEnd = LocalDateTime.parse(slot.getEndTime());
+            if (calendarEntityStart.isAfter(slotStart) && calendarEntityEnd.isBefore(slotEnd)) {
                 canFit = true;
                 break;
             }

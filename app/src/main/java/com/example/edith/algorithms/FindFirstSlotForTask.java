@@ -7,27 +7,37 @@ import com.example.edith.models.CalendarEntity;
 import com.example.edith.models.Task;
 import com.example.edith.models.TimeSlot;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class FindFirstSlotForTask {
     public FindFirstSlotForTask() {
     }
-    public static ArrayList<CalendarEntity> find(ArrayList<TimeSlot> availableSlots, int duration, ZonedDateTime deadline, String taskName, ArrayList<CalendarEntity> calendarEntities) {
-        ZonedDateTime now = ZonedDateTime.now();
+
+    // Given a list of available time slots, a task duration, a deadline, a task name, and a list of calendar entities,
+    // this method finds the first available time slot that can accommodate the task.
+    // If no available slot exists, it attempts to rearrange the existing tasks to make space for the new task.
+    // It returns an ArrayList of Task objects representing the rescheduled tasks after the new task has been scheduled.
+    public static ArrayList<Task> find(ArrayList<TimeSlot> availableSlots, int duration, String deadline, String taskTitle, ArrayList<CalendarEntity> calendarEntities) {
+        LocalDateTime deadlineLDT = LocalDateTime.parse(deadline);
+        LocalDateTime now = LocalDateTime.now();
         if (availableSlots == null) {
             Log.d("FindFirstSlotForTask","no available slots");
             return null;
         }
-        ArrayList<CalendarEntity> rescheduledCalendarEntities = new ArrayList<>();
+        ArrayList<Task> rescheduledTasks = new ArrayList<>();
         if (!availableSlots.isEmpty()) {
             for (int i = 0; i < availableSlots.size(); i++) {
                 TimeSlot availableSlot = availableSlots.get(i);
                 if (availableSlot.getDuration() <= duration) {
-                    CalendarEntity newCalendarEntity = new CalendarEntity(taskName, availableSlot.getStartTime(), availableSlot.getStartTime().plusMinutes(availableSlot.getDuration()));
-                    rescheduledCalendarEntities.add(newCalendarEntity);
-                    return rescheduledCalendarEntities;
+                    LocalDateTime availableSlotStart = LocalDateTime.parse(availableSlot.getStartTime());
+                    Task task = new Task(taskTitle, availableSlot.getStartTime(), availableSlotStart.plusMinutes(availableSlot.getDuration()).toString());
+                    rescheduledTasks.add(task);
+                    return rescheduledTasks;
                 }
             }
             //If no available slot exists
@@ -45,9 +55,13 @@ public class FindFirstSlotForTask {
             for (CalendarEntity holdEntity : holdEntities) {
                 boolean isPlaced = false;
                 for (CalendarEntity nonTaskEntity : calendarEntities) {
-                    if (nonTaskEntity.getStartTime().isAfter(now) && nonTaskEntity.getEndTime().isBefore(deadline)) {
-                        ZonedDateTime proposedEndTime = nonTaskEntity.getStartTime().plusMinutes(holdEntity.getDurationMinutes());
-                        if (proposedEndTime.isBefore(nonTaskEntity.getEndTime())) {
+                    LocalDateTime nonTaskEntityStart = LocalDateTime.parse(nonTaskEntity.getStartTime());
+                    LocalDateTime nonTaskEntityEnd = LocalDateTime.parse(nonTaskEntity.getEndTime());
+
+                    if (nonTaskEntityStart.isAfter(now) && nonTaskEntityEnd.isBefore(deadlineLDT)) {
+                        LocalDateTime proposedEndTimeLDT = nonTaskEntityStart.plusMinutes(holdEntity.getDurationMinutes());
+                        String proposedEndTime = proposedEndTimeLDT.toString();
+                        if (proposedEndTimeLDT.isBefore(nonTaskEntityEnd)) {
                             // The holdEntity can be placed in the tempEntity slot
                             holdEntity.setEndTime(proposedEndTime);
                             calendarEntities.add(holdEntity);
@@ -65,9 +79,11 @@ public class FindFirstSlotForTask {
                             break;
                         }
                         if (holdEntities.get(i).isReschedulable()) {
-                            CalendarEntity newCalendarEntity = new CalendarEntity(taskName, holdEntities.get(i).getStartTime(), holdEntities.get(i).getStartTime().plusMinutes(Integer.parseInt(String.valueOf(holdEntities.get(i).getDurationMinutes()))));
-                            rescheduledCalendarEntities.add(newCalendarEntity);
-                            rescheduledCalendarEntities.add(SchedulerController.rescheduleTaskRequest((Task) holdEntities.get(i)));
+                            LocalDateTime holdEntityStart = LocalDateTime.parse(holdEntities.get(i).getStartTime());
+                            int holdEntityDuration = holdEntities.get(i).getDurationMinutes();
+                            Task newTask = new Task(taskTitle, holdEntities.get(i).getStartTime(), holdEntityStart.plusMinutes(holdEntityDuration).toString());
+                            rescheduledTasks.add(newTask);
+                            rescheduledTasks.add(SchedulerController.rescheduleTaskRequest((Task) holdEntities.get(i)));
                             break;
                         }
                     }
@@ -76,16 +92,18 @@ public class FindFirstSlotForTask {
             }
             //Compare finalEntities with calendarEntities
             for (CalendarEntity entity : calendarEntities) {
-                if (!calendarEntities.contains(entity)) {
-                    rescheduledCalendarEntities.add(entity);
-                }
-                if (calendarEntities.contains(entity)) {
-                    for (CalendarEntity entity1 : calendarEntities) {
-                        if (entity1.equals(entity)) {
-                            //If entity in finalEntities has different start time in calendarEntities
-                            if (!entity1.getStartTime().equals(entity.getStartTime())) {
-                                //Add entity to rescheduledCalendarEntities
-                                rescheduledCalendarEntities.add(entity);
+                if (Objects.equals(entity.getType(), "task")) {
+                    if (!calendarEntities.contains(entity)) {
+                        rescheduledTasks.add((Task) entity);
+                    }
+                    if (calendarEntities.contains(entity)) {
+                        for (CalendarEntity entity1 : calendarEntities) {
+                            if (entity1.equals(entity)) {
+                                //If entity in finalEntities has different start time in calendarEntities
+                                if (!entity1.getStartTime().equals(entity.getStartTime())) {
+                                    //Add entity to rescheduledCalendarEntities
+                                    rescheduledTasks.add((Task) entity);
+                                }
                             }
                         }
                     }
@@ -93,7 +111,7 @@ public class FindFirstSlotForTask {
             }
         }
 
-        return rescheduledCalendarEntities;
+        return rescheduledTasks;
     }
 
 

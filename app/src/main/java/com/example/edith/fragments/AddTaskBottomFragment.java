@@ -23,22 +23,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.edith.R;
-import com.example.edith.activities.MainActivity;
 import com.example.edith.controllers.TaskController;
 import com.example.edith.data.DatabaseOperations;
 import com.example.edith.data.FirebaseOperations;
-import com.example.edith.models.TaskRequest;
-import com.example.edith.models.addTaskRequest;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
+import com.example.edith.models.TaskRequests.addTaskRequest;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 public class AddTaskBottomFragment extends BottomSheetDialogFragment {
 
@@ -178,10 +173,12 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
                 String taskTitle = addTaskTitle.getText().toString();
                 String taskDesc = addTaskDescription.getText().toString();
                 int duration = addDuration.getValue();
-                String taskDueDate = dueDate;
+                // TODO: Convert date to "YYYY/MM/DD" format
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
+                String taskDueDate = LocalDate.parse(dueDate, formatter).atStartOfDay().toString();
+
                 // TODO: pass the fields to TaskRequest
                 addTaskRequest addTaskRequest = new addTaskRequest(taskTitle, taskDesc, taskDueDate, duration);
-                TaskController taskController = new TaskController(db);
                 Log.i(TAG, "Task ID:" + id);
 
                 if (taskTitle.isEmpty()) {
@@ -190,7 +187,7 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
                     Toast.makeText(context, "Please input due date!", Toast.LENGTH_SHORT).show();
                 } else {
                     // TODO: Convert strings received to Task object and send task controller
-                    taskController.addTask(addTaskRequest);
+                    TaskController.addTask(addTaskRequest);
 
 //                    Map<String, Object> taskMap = new HashMap<>();
 //                    taskMap.put("taskTitle", taskTitle);

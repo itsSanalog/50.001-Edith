@@ -1,4 +1,4 @@
-package com.example.edith.models;
+package com.example.edith.models.TaskRequests;
 
 public class deleteTaskRequest extends TaskRequest {
     private String id;
@@ -6,5 +6,8 @@ public class deleteTaskRequest extends TaskRequest {
     public deleteTaskRequest(String id){
         super(id, null, null, 0);
         this.id = id;
+    }
+    public String getId() {
+        return id;
     }
 }
