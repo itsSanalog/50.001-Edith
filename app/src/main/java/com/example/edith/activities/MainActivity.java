@@ -112,7 +112,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         hello.setTextColor(R.color.white);
         Shader textShader = new LinearGradient(0, 0, hello.getPaint()
                 .measureText(hello.getText().toString()), hello.getTextSize(),
-                new int[]{R.color.gradientblue, R.color.gradientpurple, R.color.gradientpink},
+                new int[]{getResources().getColor(R.color.gradientblue),
+                        getResources().getColor(R.color.gradientpurple),
+                        getResources().getColor(R.color.gradientpink)},
                 null, Shader.TileMode.CLAMP);
         hello.getPaint().setShader(textShader);
 
