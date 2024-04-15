@@ -17,6 +17,11 @@ public class CalendarEntity {
         //Code out logic
         return true;
     }
+    public CalendarEntity() {
+        this.entityTitle = null;
+        this.timeSlot = null;
+        this.entityID = UUID.randomUUID().toString();
+    }
     public CalendarEntity(String entityTitle, String startTime, String endTime) {
         this.entityTitle = entityTitle;
         this.timeSlot = new TimeSlot(startTime,endTime);

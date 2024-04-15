@@ -105,9 +105,9 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
             editTaskDescription.setText(taskDescription);
             updateDueDateText.setText(dueDate);
 
-            if (taskTitle.length() > 0){
-                updateTaskButton.setEnabled(false);
-                updateTaskButton.setBackgroundColor(Color.GRAY);
+            if (taskTitle != null && taskTitle.length() > 0){
+                updateTaskButton.setEnabled(true);
+                updateTaskButton.setBackgroundColor(getResources().getColor(R.color.spacegrey));
             }
 
         }

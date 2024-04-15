@@ -95,7 +95,9 @@ public class FirebaseOperations implements DatabaseOperations {
 
     // GetTask
     public Task getTask(int position){
-        Log.i("TaskAdapterDB", taskList.toString());
+        Log.i("TaskAdapterDB1", "test" + taskList.get(position).getEntityTitle());
+        Log.i("TaskAdapterDB2", "test" + taskList.get(position));
+
         return taskList.get(position);
     }
 
@@ -113,16 +115,16 @@ public class FirebaseOperations implements DatabaseOperations {
     public void addTask(Task task){
         Map<String, Object> taskMap = new HashMap<>();
         // Add task to the database
-        taskMap.put("id", task.getEntityID());
-        taskMap.put("title", task.getEntityTitle());
+        taskMap.put("entityID", task.getEntityID());
+        taskMap.put("entityTitle", task.getEntityTitle());
         taskMap.put("description", task.getDescription());
-        taskMap.put("status", task.isCompleted());
+        taskMap.put("isCompleted", task.isCompleted());
         taskMap.put("priority", task.getPriority());
         taskMap.put("deadline", task.getDeadline());
-        taskMap.put("duration", task.getDurationMinutes());
+        taskMap.put("durationMinutes", task.getDurationMinutes());
         taskMap.put("start_time", task.getStartTime());
         taskMap.put("end_time", task.getEndTime());
-        taskMap.put("TimeSlot", task.getTimeSlot());
+        taskMap.put("timeSlot", task.getTimeSlot());
 
         taskDatabaseReference.add(taskMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
@@ -177,16 +179,16 @@ public class FirebaseOperations implements DatabaseOperations {
     public void updateTask(Task task){
         Map<String, Object> taskMap = new HashMap<>();
         // Update task in the database
-        taskMap.put("id", task.getEntityID());
-        taskMap.put("title", task.getEntityTitle());
+        taskMap.put("entityID", task.getEntityID());
+        taskMap.put("entityTitle", task.getEntityTitle());
         taskMap.put("description", task.getDescription());
-        taskMap.put("status", task.isCompleted());
+        taskMap.put("isCompleted", task.isCompleted());
         taskMap.put("priority", task.getPriority());
         taskMap.put("deadline", task.getDeadline());
-        taskMap.put("duration", task.getDurationMinutes());
+        taskMap.put("durationMinutes", task.getDurationMinutes());
         taskMap.put("start_time", task.getStartTime());
         taskMap.put("end_time", task.getEndTime());
-        taskMap.put("TimeSlot", task.getTimeSlot());
+        taskMap.put("timeSlot", task.getTimeSlot());
 
         taskDatabaseReference.document(task.getEntityID()).set(taskMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

@@ -105,6 +105,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         Task Task = db.getTask(position);
         Log.i("TaskAdapter", "The task at this position is : " + db.getTask(position).toString());
         Log.d("TaskAdapter", "The task id of this is : " + db.getTask(position).getEntityID());
+        Log.d("TaskAdapter", "The task title of this is : " + db.getTask(position).getEntityTitle());
+        Log.d("TaskAdapter", "The task desc of this is : " + db.getTask(position).getDescription());
+        Log.d("TaskAdapter", "The task deadline of this is : " + db.getTask(position).getDeadline());
+
+
+
         holder.taskName.setText(db.getTask(position).getEntityTitle());
         holder.taskDescription.setText(db.getTask(position).getDescription());
         holder.taskDate.setText("Do on " + db.getTask(position).getStartTime());
