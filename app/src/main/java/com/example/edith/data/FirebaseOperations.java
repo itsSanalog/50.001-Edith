@@ -169,8 +169,6 @@ public class FirebaseOperations implements DatabaseOperations {
             public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
                 // Log success message
                 Log.d(TAG, "Task removed successfully");
-                String ID = taskDatabaseReference.get().getResult().toString();
-                Log.d("removeTask", "ID: " + ID);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
