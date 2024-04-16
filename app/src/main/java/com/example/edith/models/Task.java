@@ -74,4 +74,34 @@ public class Task extends CalendarEntity {
             return null;
         }
     }
+
+    public String getDate(){
+        String startDate = super.getStartTime();
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            Date date = sdf.parse(startDate);
+            SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String output = outputFormat.format(date);
+            return output;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public String getTime(){
+        String startDate = super.getStartTime();
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            Date date = sdf.parse(startDate);
+            SimpleDateFormat outputFormat = new SimpleDateFormat("HH:mm");
+            String output = outputFormat.format(date);
+            return output;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

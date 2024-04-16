@@ -80,12 +80,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         Bundle bundle = new Bundle();
         bundle.putString("taskTitle", db.getTask(position).getEntityTitle());
         bundle.putString("taskDescription", db.getTask(position).getDescription());
-        bundle.putString("taskDueDate", db.getTask(position).getStartTime());
-        bundle.putString("taskDeadlineTime", db.getTask(position).getDeadline());
+        bundle.putString("taskDueDate", db.getTask(position).getDate());
+        bundle.putString("taskDeadlineTime", db.getTask(position).getTime());
         // TODO : add back after startTime is converted to String
         //bundle.putString("taskDueDate", Task.getStartTime());
         //bundle.putString("orderDate", Task.getOrderDate());
-        bundle.putString("taskID", Task.getEntityID());
+        bundle.putString("id", db.getTask(position).getEntityID());
 
         UpdateTaskBottomFragment updateTask = new UpdateTaskBottomFragment();
         updateTask.setArguments(bundle);
