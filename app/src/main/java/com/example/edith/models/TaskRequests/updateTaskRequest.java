@@ -1,5 +1,7 @@
 package com.example.edith.models.TaskRequests;
 
+import android.util.Log;
+
 import com.example.edith.models.TaskRequests.TaskRequest;
 
 public class updateTaskRequest extends TaskRequest {
@@ -12,6 +14,10 @@ public class updateTaskRequest extends TaskRequest {
     // Default Constructor
     public updateTaskRequest(String id, String entityName, String entityDescription, String taskDeadline, int duration) {
         super(entityName, entityDescription, taskDeadline, duration);
+        this.entityName = entityName;
+        this.entityDescription = entityDescription;
+        this.taskDeadline = taskDeadline;
+        this.duration = duration;
         this.id = id;
     }
 
@@ -28,6 +34,8 @@ public class updateTaskRequest extends TaskRequest {
     }
 
     public String getTaskDeadline() {
+        Log.d("DeadlineNull", "taskDueDate in updateTaskRequest: " + taskDeadline);
+
         return taskDeadline;
     }
 

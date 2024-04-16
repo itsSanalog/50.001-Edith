@@ -39,9 +39,16 @@ public class TaskController {
 
     // Update taskRequest to be passed into here.
     public static void updateTask(updateTaskRequest updateTaskRequest) {
-        deleteTaskRequest deleteTaskRequest = new deleteTaskRequest(updateTaskRequest.getId());
+        String id = updateTaskRequest.getId();
+        String entityName = updateTaskRequest.getEntityName();
+        String entityDescription = updateTaskRequest.getEntityDescription();
+        String taskDeadline = updateTaskRequest.getTaskDeadline();
+        int duration = updateTaskRequest.getDuration();
+        Log.d("DeadlineNull", "taskDueDate in taskController: " + taskDeadline);
+
+        deleteTaskRequest deleteTaskRequest = new deleteTaskRequest(id);
         TaskController.deleteTask(deleteTaskRequest);
-        addTaskRequest addTaskRequest = new addTaskRequest(updateTaskRequest.getEntityName(), updateTaskRequest.getEntityDescription(), updateTaskRequest.getTaskDeadline(), updateTaskRequest.getDuration());
+        addTaskRequest addTaskRequest = new addTaskRequest(entityName, entityDescription, taskDeadline, duration);
         TaskController.addTask(addTaskRequest);
     }
 

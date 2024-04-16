@@ -30,6 +30,10 @@ import com.example.edith.data.FirebaseOperations;
 import com.example.edith.models.TaskRequests.updateTaskRequest;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
 public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
@@ -155,9 +159,8 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        String date = dayOfMonth + "/" + (month + 1) + "/" + year;
-                        dueDateUpdate = date;
-                        updateDueDateText.setText(date);
+                        dueDateUpdate = LocalDate.of(year, month + 1, dayOfMonth).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        updateDueDateText.setText(dueDateUpdate);
                     }
                 }, YEAR, MONTH, DAY);
 
@@ -176,8 +179,8 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(context, R.style.TimePickerDialogTheme, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        String time = hourOfDay + ":" + minute;
-                        updateDeadlineTime.setText(time);
+                        LocalTime time = LocalTime.of(hourOfDay, minute);
+                        updateDeadlineTime.setText(time.toString());
                     }
                 }, HOUR, MINUTE, true);
 
@@ -194,7 +197,12 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
                 String taskTitle = editTaskTitle.getText().toString();
                 String taskDescription = editTaskDescription.getText().toString();
                 int taskDuration = editTaskDuration.getValue();
-                String taskDueDate = dueDateUpdate;
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                LocalDateTime localDateTime = LocalDateTime.parse(dueDateUpdate + " " + updateDeadlineTime.getText().toString(), formatter);
+                String taskDueDate = localDateTime.toString();
+
+
+                Log.d("DeadlineNull", "taskDueDate in bottom fragment: " + taskDueDate);
                 // TODO: pass the fields to TaskRequest
                 updateTaskRequest updateTaskRequest = new updateTaskRequest(id, taskTitle, taskDescription, taskDueDate, taskDuration);
                 Log.i("UpdateTaskBottomFragment", "Task ID" + id);

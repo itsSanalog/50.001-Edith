@@ -179,12 +179,6 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//                        String date = dayOfMonth + "/" + (month + 1) + "/" + year;
-//                        dueDate = date;
-//                        addTaskDate.setText(date);
-//                        // Convert date to "YYYY/MM/DD" format
-//                        String[] parts = date.split("/");
-//                        orderDate = parts[2] + "/" + parts[1] + "/" + parts[0];
                         dueDate = LocalDate.of(year, month + 1, dayOfMonth).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
                         addTaskDate.setText(dueDate);
                     }
@@ -234,7 +228,7 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
 
                 // TODO: pass the fields to TaskRequest
                 addTaskRequest addTaskRequest = new addTaskRequest(taskTitle, taskDesc, taskDueDate, duration);
-]
+
 
                 if (taskTitle.isEmpty()) {
                     Toast.makeText(context, "Task title cannot be empty", Toast.LENGTH_SHORT).show();

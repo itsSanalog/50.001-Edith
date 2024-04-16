@@ -59,7 +59,8 @@ public class SchedulerController {
             // Get the duration from the task request
             int duration = task.getDurationMinutes();
             // Get the existing entities from the local storage
-            List<CalendarEntity> existingEntities = databaseOperations.getAllCalendarEntities();
+            List<Task> existingTasks = databaseOperations.getAllTasks();
+            List<CalendarEntity> existingEntities = new ArrayList<>(existingTasks);
             // Use the FindAvailableSlots algorithm to find all available slots that can accommodate the task
             // This excludes the existing slot of the task to be rescheduled
             List<TimeSlot> availableSlots = FindAvailableSlots.getAvailableSlots(existingEntities, duration, deadline);
