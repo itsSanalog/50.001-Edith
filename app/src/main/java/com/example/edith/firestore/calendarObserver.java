@@ -56,6 +56,7 @@ public class calendarObserver implements databaseObserver {
     @Override
     public void update() {
         List<Task> tasks =  firebaseOperations.getAllTasks();
+
         GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(
                         context, Collections.singleton("https://www.googleapis.com/auth/calendar"))
                 .setBackOff(new ExponentialBackOff())
@@ -132,9 +133,11 @@ public class calendarObserver implements databaseObserver {
              //entity2.setDescription("Updated description");
              //FirebaseOperations.update(entity2);
 
-         }
+
+}
 
 
-    }
+
+
 
 
