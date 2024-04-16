@@ -61,6 +61,16 @@ dependencies {
     testImplementation("androidx.test:core:1.5.0")
     androidTestImplementation("androidx.test.ext:junit:1.1.5@aar")
 
+    //For google calendar api
+    implementation("com.google.api-client:google-api-client-android:1.31.5")
+    implementation("com.google.api-client:google-api-client-gson:1.31.5")
+    implementation ("com.google.apis:google-api-services-calendar:v3-rev20220715-2.0.0")
+
+    implementation ("com.google.http-client:google-http-client-android:1.39.2")
+    implementation ("com.google.http-client:google-http-client-jackson2:1.39.2")
+
+
+
     // For CircleImageView Library
     implementation("de.hdodenhof:circleimageview:3.1.0")
 
