@@ -65,10 +65,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public void deleteTask(int position){
         // position automatically provided by RecyclerView, and should be a list? provided by db
         Task Task = db.getTask(position);
-
+        Log.d("DeleteTask", "Task.getEntityID is :" + db.getTask(position).getEntityID());
         TaskController taskController = new TaskController();
-        deleteTaskRequest deleteTaskRequest = new deleteTaskRequest(Task.getEntityID());
+        deleteTaskRequest deleteTaskRequest = new deleteTaskRequest(db.getTask(position).getEntityID());
         taskController.deleteTask(deleteTaskRequest);
+
         //db.removeTask(Task.getEntityID());
         notifyItemRemoved(position);
     }
@@ -77,8 +78,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         Task Task = db.getTask(position);
 
         Bundle bundle = new Bundle();
-        bundle.putString("taskTitle", Task.getEntityTitle());
-        bundle.putString("taskDescription", Task.getDescription());
+        bundle.putString("taskTitle", db.getTask(position).getEntityTitle());
+        bundle.putString("taskDescription", db.getTask(position).getDescription());
+        bundle.putString("taskDueDate", db.getTask(position).getStartTime());
+        bundle.putString("taskDeadlineTime", db.getTask(position).getDeadline());
         // TODO : add back after startTime is converted to String
         //bundle.putString("taskDueDate", Task.getStartTime());
         //bundle.putString("orderDate", Task.getOrderDate());
@@ -86,6 +89,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         UpdateTaskBottomFragment updateTask = new UpdateTaskBottomFragment();
         updateTask.setArguments(bundle);
+
+        Log.d("EditTask", bundle.getString("taskTitle"));
         updateTask.show(((FragmentActivity) context).getSupportFragmentManager(), updateTask.getTag());
         //Log.i("TaskAdapter", "Task ID:" + Task.getEntityID());
     }
@@ -113,7 +118,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         holder.taskName.setText(db.getTask(position).getEntityTitle());
         holder.taskDescription.setText(db.getTask(position).getDescription());
-        holder.taskDate.setText("Do on " + db.getTask(position).getStartTime());
+        holder.taskDate.setText("Do on " + db.getTask(position).convertStartDate());
 
         boolean isChecked = Task.isCompleted();
         holder.checkBox.setChecked(isChecked);
