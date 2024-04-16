@@ -146,6 +146,23 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
                 addButton.setEnabled(s.toString().length() != 0);
             }
         });
+
+        // Configure the Task Description EditText
+        addTaskDescription.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                addButton.setEnabled(s.toString().length() != 0);
+            }
+        });
+
         // Configure the Due Date TextView
         addTaskDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,7 +227,7 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
 
                 // TODO: pass the fields to TaskRequest
                 addTaskRequest addTaskRequest = new addTaskRequest(taskTitle, taskDesc, taskDueDate, duration);
-                Log.i(TAG, "Task ID:" + id);
+                Log.i(TAG, "Task Description: " + taskDesc + taskDueDate);
 
                 if (taskTitle.isEmpty()) {
                     Toast.makeText(context, "Task title cannot be empty", Toast.LENGTH_SHORT).show();

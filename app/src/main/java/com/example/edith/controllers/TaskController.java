@@ -31,13 +31,17 @@ public class TaskController {
         for (Task task : entitiesToBeUpdated) {
             //Update entity in firebase
             FirebaseOperations.getInstance().addTask(task);
+            Log.d("AddTaskDebug", task.getDescription()+task.getDeadline());
             Log.d("AlgoDebug", "Task added to firebase: " + task.getEntityTitle());
         }
     }
 
     // Update taskRequest to be passed into here.
     public static void updateTask(updateTaskRequest updateTaskRequest) {
-
+        deleteTaskRequest deleteTaskRequest = new deleteTaskRequest(updateTaskRequest.getId());
+        TaskController.deleteTask(deleteTaskRequest);
+        addTaskRequest addTaskRequest = new addTaskRequest(updateTaskRequest.getEntityName(), updateTaskRequest.getEntityDescription(), updateTaskRequest.getTaskDeadline(), updateTaskRequest.getDuration());
+        TaskController.addTask(addTaskRequest);
     }
 
     public static void deleteTask(deleteTaskRequest deleteTaskRequest) {

@@ -111,10 +111,10 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
             updateDueDateText.setText(dueDate);
             updateDeadlineTime.setText(deadlineTime);
 
-            if (taskTitle != null && taskTitle.length() > 0){
-                updateTaskButton.setEnabled(true);
-                updateTaskButton.setBackgroundColor(getResources().getColor(R.color.spacegrey));
-            }
+//            if (taskTitle != null && taskTitle.length() > 0){
+//                updateTaskButton.setEnabled(true);
+//                updateTaskButton.setBackgroundColor(getResources().getColor(R.color.spacegrey));
+//            }
 
         }
 
@@ -173,7 +173,7 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
                 int MINUTE = calendar.get(Calendar.MINUTE);
 
                 // show the time picker dialog
-                TimePickerDialog timePickerDialog = new TimePickerDialog(context, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(context, R.style.TimePickerDialogTheme, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         String time = hourOfDay + ":" + minute;
@@ -201,6 +201,7 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
                 if (id != null && finalIsUpdate){
                     // TODO: update the task by calling the Task controller passing in the fields
                     TaskController.updateTask(updateTaskRequest);
+                    dismiss();
                 }
             }
         });
