@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -22,9 +23,10 @@ public class FindFirstSlotForTask {
     // this method finds the first available time slot that can accommodate the task.
     // If no available slot exists, it attempts to rearrange the existing tasks to make space for the new task.
     // It returns an ArrayList of Task objects representing the rescheduled tasks after the new task has been scheduled.
-    public static ArrayList<Task> find(ArrayList<TimeSlot> availableSlots, int duration, String deadline, String taskTitle, ArrayList<CalendarEntity> calendarEntities) {
+    public static List<Task> find(List<TimeSlot> availableSlots, int duration, String deadline, String taskTitle, List<CalendarEntity> calendarEntities) {
         LocalDateTime deadlineLDT = LocalDateTime.parse(deadline);
         LocalDateTime now = LocalDateTime.now();
+        Log.d("GoogleCalendarOperations", "Localtime now" + now);
         if (availableSlots == null) {
             return null;
         }
@@ -34,8 +36,9 @@ public class FindFirstSlotForTask {
                 TimeSlot availableSlot = availableSlots.get(i);
                 if (duration <= availableSlot.getDuration()) {
                     LocalDateTime availableSlotStart = LocalDateTime.parse(availableSlot.getStartTime());
-                    Task task = new Task(taskTitle, availableSlot.getStartTime(), availableSlotStart.plusMinutes(availableSlot.getDuration()).toString());
+                    Task task = new Task(taskTitle, availableSlot.getStartTime(), availableSlotStart.plusMinutes(duration).toString());
                     rescheduledTasks.add(task);
+                    Log.d("GoogleCalendarOperations", "Task added to rescheduled tasks: " + task.getEntityTitle() + " " + task.getStartTime() + " " + task.getEndTime());
                     return rescheduledTasks;
                 }
             }
@@ -49,7 +52,7 @@ public class FindFirstSlotForTask {
                 }
             }
 
-            ArrayList<TimeSlot> availableSlots2 = FindAvailableSlots.getAvailableSlots(calendarEntities, duration, deadline);
+            List<TimeSlot> availableSlots2 = FindAvailableSlots.getAvailableSlots(calendarEntities, duration, deadline);
             holdEntities.sort((e1, e2) -> Long.compare(e2.getDurationMinutes(), e1.getDurationMinutes()));
             for (CalendarEntity holdEntity : holdEntities) {
                 boolean isPlaced = false;

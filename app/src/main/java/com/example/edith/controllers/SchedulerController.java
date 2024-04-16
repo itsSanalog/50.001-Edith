@@ -15,6 +15,7 @@ import com.example.edith.models.TimeSlot;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class SchedulerController {
@@ -29,19 +30,22 @@ public class SchedulerController {
      * @param taskRequest The task request object containing the details of the task such as its duration and deadline.
      * @return An ArrayList of CalendarEntity objects representing the rescheduled entities after the task has been scheduled.
      */
-    public static ArrayList<Task> addTaskRequest(TaskRequest taskRequest) {
+    public static List<Task> addTaskRequest(TaskRequest taskRequest) {
         DatabaseOperations databaseOperations = FirebaseOperations.getInstance();
         // Get the deadline from the task request
         String deadline = taskRequest.getDeadline();
         // Get the duration from the task request
         int duration = taskRequest.getDuration();
-        Log.d("AlgoDebug", "Duration: " + duration + " Deadline: " + deadline);
+        Log.d("GoogleCalendarOperations", "Duration: " + duration + " Deadline: " + deadline);
         // Get the existing entities from the local storage
-        ArrayList<CalendarEntity> existingEntities = databaseOperations.getAllCalendarEntities();
-        Log.d("AlgoDebug", "Existing entities: " + existingEntities.size());
+        List<Task> existingTasks = databaseOperations.getAllTasks();
+        List<CalendarEntity> existingEntities = new ArrayList<>(existingTasks);
+        Log.d("GoogleCalendarOperations", "Existing entities: " + existingEntities.size());
         // Use the FindAvailableSlots algorithm to find all available slots that can accommodate the task
-        ArrayList<TimeSlot> availableSlots = FindAvailableSlots.getAvailableSlots(existingEntities, duration, deadline);
-        Log.d("AlgoDebug", "Available slots: " + availableSlots.get(0).getStartTime()+ " - " + availableSlots.get(0).getEndTime());
+        List<TimeSlot> availableSlots = FindAvailableSlots.getAvailableSlots(existingEntities, duration, deadline);
+        Log.d("GoogleCalendarOperations", "Available slots have size: " + availableSlots.size());
+        Log.d("GoogleCalendarOperations", "Available slots: " + availableSlots);
+        Log.d("GoogleCalendarOperations", "Available slots: " + availableSlots.get(0).getStartTime()+ " - " + availableSlots.get(0).getEndTime());
         // Create an instance of FindFirstSlotForTask
         return FindFirstSlotForTask.find(availableSlots, duration, deadline, taskRequest.getEntityName(), existingEntities);
         // Use the FindFirstSlotForTask algorithm to find the first available slot for the task and return the rescheduled entities
@@ -54,10 +58,10 @@ public class SchedulerController {
             // Get the duration from the task request
             int duration = task.getDurationMinutes();
             // Get the existing entities from the local storage
-            ArrayList<CalendarEntity> existingEntities = databaseOperations.getAllCalendarEntities();
+            List<CalendarEntity> existingEntities = databaseOperations.getAllCalendarEntities();
             // Use the FindAvailableSlots algorithm to find all available slots that can accommodate the task
             // This excludes the existing slot of the task to be rescheduled
-            ArrayList<TimeSlot> availableSlots = FindAvailableSlots.getAvailableSlots(existingEntities, duration, deadline);
+            List<TimeSlot> availableSlots = FindAvailableSlots.getAvailableSlots(existingEntities, duration, deadline);
             // Create an instance of FindFirstSlotForTask
             return FindRescheduleSlotForTask.find(availableSlots, task.getEntityTitle(), task);
         }
@@ -67,8 +71,8 @@ public class SchedulerController {
         DatabaseOperations databaseOperations = FirebaseOperations.getInstance();
         String deadline = task.getDeadline();
         int duration = task.getDurationMinutes();
-        ArrayList<CalendarEntity> existingEntities = databaseOperations.getAllCalendarEntities();
-        ArrayList<TimeSlot> availableSlots = FindAvailableSlots.getAvailableSlots(existingEntities, duration, deadline);
+        List<CalendarEntity> existingEntities = databaseOperations.getAllCalendarEntities();
+        List<TimeSlot> availableSlots = FindAvailableSlots.getAvailableSlots(existingEntities, duration, deadline);
         return CanCalendarEntityFitInSlots.canFit(availableSlots, task);
     }
 

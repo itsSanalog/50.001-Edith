@@ -34,6 +34,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import android.util.Log;
@@ -158,12 +161,14 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
                 DatePickerDialog datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        String date = dayOfMonth + "/" + (month + 1) + "/" + year;
-                        dueDate = date;
-                        addTaskDate.setText(date);
-                        // Convert date to "YYYY/MM/DD" format
-                        String[] parts = date.split("/");
-                        orderDate = parts[2] + "/" + parts[1] + "/" + parts[0];
+//                        String date = dayOfMonth + "/" + (month + 1) + "/" + year;
+//                        dueDate = date;
+//                        addTaskDate.setText(date);
+//                        // Convert date to "YYYY/MM/DD" format
+//                        String[] parts = date.split("/");
+//                        orderDate = parts[2] + "/" + parts[1] + "/" + parts[0];
+                        dueDate = LocalDate.of(year, month + 1, dayOfMonth).format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+                        addTaskDate.setText(dueDate);
                     }
                 }, YEAR, MONTH, DAY);
 
@@ -182,8 +187,8 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
                 TimePickerDialog timePickerDialog = new TimePickerDialog(context, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        String time = hourOfDay + ":" + minute;
-                        addTaskTime.setText(time);
+                        LocalTime time = LocalTime.of(hourOfDay, minute);
+                        addTaskTime.setText(time.toString());
                     }
                 }, HOUR, MINUTE, true);
 
@@ -204,11 +209,14 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
                 String taskDesc = addTaskDescription.getText().toString();
                 int duration = addDuration.getValue();
                 // TODO: Convert date to "YYYY/MM/DD" format
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyyy");
-                String taskDueDate = LocalDate.parse(dueDate, formatter).atStartOfDay().toString();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+                LocalDateTime localDateTime = LocalDateTime.parse(dueDate + " " + addTaskTime.getText().toString(), formatter);
+                String taskDueDate = localDateTime.toString();
+                Log.d("GoogleCalendarOperations", "Task due date: " + taskDueDate);
 
                 // TODO: pass the fields to TaskRequest
                 addTaskRequest addTaskRequest = new addTaskRequest(taskTitle, taskDesc, taskDueDate, duration);
+                Log.d("GoogleCalendarOperations", "addTaskRequest created in add fragment: " + addTaskRequest.toString());
                 Log.i(TAG, "Task ID:" + id);
 
                 if (taskTitle.isEmpty()) {
@@ -218,7 +226,7 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
                 } else {
                     // TODO: Convert strings received to Task object and send task controller
                     TaskController.addTask(addTaskRequest);
-                    Log.d("AlgoDebug", "TaskController addTask called");
+                    Log.d("GoogleCalendarOperations", "TaskController addTask called in add fragment");
 
 //                    Map<String, Object> taskMap = new HashMap<>();
 //                    taskMap.put("taskTitle", taskTitle);

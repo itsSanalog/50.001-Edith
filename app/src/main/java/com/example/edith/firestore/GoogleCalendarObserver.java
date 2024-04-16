@@ -1,11 +1,7 @@
 package com.example.edith.firestore;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Context;
 import android.util.Log;
-
-import androidx.annotation.NonNull;
 
 import com.example.edith.activities.GoogleAccountHolder;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -20,9 +16,7 @@ import com.google.api.client.json.jackson2.JacksonFactory;
 
 
 import com.google.api.services.calendar.Calendar;
-import com.google.api.services.calendar.CalendarScopes;
 import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.Events;
 
 
 import com.google.api.client.util.DateTime;
@@ -30,22 +24,13 @@ import com.google.api.services.calendar.model.EventDateTime;
 import java.io.IOException;
 
 
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.example.edith.models.CalendarEntity;
-
 import java.util.Collections;
 import java.util.List;
-import java.time.Instant;
-import java.util.ArrayList;
 
-public class calendarObserver implements databaseObserver {
+public class GoogleCalendarObserver implements CalendarObserver {
     private Context context;
     private GoogleSignInAccount account;
-    public calendarObserver(Context context) {
+    public GoogleCalendarObserver(Context context) {
 
         this.context = context;
         this.firebaseOperations = FirebaseOperations.getInstance();
@@ -54,7 +39,8 @@ public class calendarObserver implements databaseObserver {
 
     private FirebaseOperations firebaseOperations;
     @Override
-    public void update() {
+    public void syncTasks() {
+        Log.d("firestoreObserver", "calendarObserver update called");
         List<Task> tasks =  firebaseOperations.getAllTasks();
 
         GoogleAccountCredential credential = GoogleAccountCredential.usingOAuth2(

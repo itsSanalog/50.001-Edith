@@ -24,6 +24,7 @@ import com.example.edith.R;
 import com.example.edith.adapters.TaskAdapter;
 import com.example.edith.data.DatabaseOperations;
 import com.example.edith.data.FirebaseOperations;
+import com.example.edith.data.GoogleCalendarOperations;
 import com.example.edith.fragments.AddTaskBottomFragment;
 import com.example.edith.models.Task;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -133,6 +134,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 bottomFragment.show(getSupportFragmentManager(), bottomFragment.getTag());
             }
         });
+        GoogleCalendarOperations.getInstance().setAccount(account, this);
+
 
     }
 

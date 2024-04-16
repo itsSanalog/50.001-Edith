@@ -21,6 +21,7 @@ import com.example.edith.models.Task;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firestore.v1.WriteResult;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ public class FirebaseOperations implements DatabaseOperations {
     int size;
 
     // Create a private constructor: Singleton Design Pattern
-    public FirebaseOperations(){
+    private FirebaseOperations(){
         // Initialize the database
         firestore = FirebaseFirestore.getInstance();
         taskDatabaseReference = firestore.collection("tasks");
@@ -60,6 +61,7 @@ public class FirebaseOperations implements DatabaseOperations {
                 if (adapter != null){
                     adapter.notifyDataSetChanged();
                 }
+                GoogleCalendarOperations.getInstance().syncCalendarEntities();
             }
         });
     }

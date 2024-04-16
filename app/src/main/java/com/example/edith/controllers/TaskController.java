@@ -11,6 +11,7 @@ import com.example.edith.models.TaskRequests.deleteTaskRequest;
 import com.example.edith.models.TaskRequests.updateTaskRequest;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TaskController {
 
@@ -24,14 +25,14 @@ public class TaskController {
     public static void addTask(addTaskRequest addTaskRequest) {
         //Send task request to scheduler controller
         //Get available slot from scheduler controller
-        ArrayList<Task> entitiesToBeUpdated = SchedulerController.addTaskRequest(addTaskRequest);
+        List<Task> entitiesToBeUpdated = SchedulerController.addTaskRequest(addTaskRequest);
         //Update entities in firebase
-        Log.d("AlgoDebug", "Entities to be updated: " + entitiesToBeUpdated.size());
+        Log.d("GoogleCalendarOperations", "Entities to be updated in taskcontroller: " + entitiesToBeUpdated.size());
 
         for (Task task : entitiesToBeUpdated) {
             //Update entity in firebase
             FirebaseOperations.getInstance().addTask(task);
-            Log.d("AlgoDebug", "Task added to firebase: " + task.getEntityTitle());
+            Log.d("GoogleCalendarOperations", "Task added to firebase: " + task.getEntityTitle());
         }
     }
 

@@ -5,13 +5,14 @@ import com.example.edith.models.TimeSlot;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CanCalendarEntityFitInSlots {
     ArrayList<TimeSlot> availableSlots;
     CalendarEntity calendarEntity;
     public CanCalendarEntityFitInSlots(){
     }
-    public static boolean canFit(ArrayList<TimeSlot> availableSlots, CalendarEntity calendarEntity){
+    public static boolean canFit(List<TimeSlot> availableSlots, CalendarEntity calendarEntity){
         boolean canFit = false;
         for (TimeSlot slot : availableSlots) {
             LocalDateTime calendarEntityStart = LocalDateTime.parse(calendarEntity.getStartTime());

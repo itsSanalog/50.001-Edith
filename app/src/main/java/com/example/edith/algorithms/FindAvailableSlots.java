@@ -1,11 +1,14 @@
 package com.example.edith.algorithms;
 
+import com.example.edith.data.FirebaseOperations;
 import com.example.edith.models.CalendarEntity;
+import com.example.edith.models.Task;
 import com.example.edith.models.TimeSlot;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FindAvailableSlots {
 
@@ -19,7 +22,7 @@ public class FindAvailableSlots {
      *
      * @return An ArrayList of TimeSlot objects representing all available time slots.
      */
-    public static ArrayList<TimeSlot> getAvailableSlots(ArrayList<CalendarEntity> existingEntities, int duration, String deadline) {
+    public static List<TimeSlot> getAvailableSlots(List<CalendarEntity> existingEntities, int duration, String deadline) {
         ArrayList<TimeSlot> availableSlots = new ArrayList<>();
         LocalDateTime currentTime = LocalDateTime.now();
         LocalDateTime deadlineLDT = LocalDateTime.parse(deadline);
@@ -60,7 +63,8 @@ public class FindAvailableSlots {
      * @return A boolean value indicating whether the potential slot is available.
      */
     public static boolean isSlotAvailable(TimeSlot potentialSlot) {
-        ArrayList<CalendarEntity> existingEntities = new ArrayList<>(); // Take from LES
+        List<Task> existingTasks = FirebaseOperations.getInstance().getAllTasks();
+        List<CalendarEntity> existingEntities = new ArrayList<>(existingTasks);
         for (CalendarEntity existingEntity : existingEntities) {
             LocalDateTime existingEntityStart = LocalDateTime.parse(existingEntity.getStartTime());
             LocalDateTime existingEntityEnd = LocalDateTime.parse(existingEntity.getEndTime());
