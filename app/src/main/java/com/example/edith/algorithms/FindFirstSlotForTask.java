@@ -23,7 +23,7 @@ public class FindFirstSlotForTask {
     // this method finds the first available time slot that can accommodate the task.
     // If no available slot exists, it attempts to rearrange the existing tasks to make space for the new task.
     // It returns an ArrayList of Task objects representing the rescheduled tasks after the new task has been scheduled.
-    public static List<Task> find(List<TimeSlot> availableSlots, int duration, String deadline, String taskTitle, List<CalendarEntity> calendarEntities) {
+    public static List<Task> find(List<TimeSlot> availableSlots, int duration, String deadline, String taskTitle, List<CalendarEntity> calendarEntities, String description) {
         LocalDateTime deadlineLDT = LocalDateTime.parse(deadline);
         LocalDateTime now = LocalDateTime.now();
         Log.d("GoogleCalendarOperations", "Localtime now" + now);
@@ -36,7 +36,7 @@ public class FindFirstSlotForTask {
                 TimeSlot availableSlot = availableSlots.get(i);
                 if (duration <= availableSlot.getDuration()) {
                     LocalDateTime availableSlotStart = LocalDateTime.parse(availableSlot.getStartTime());
-                    Task task = new Task(taskTitle, availableSlot.getStartTime(), availableSlotStart.plusMinutes(duration).toString());
+                    Task task = new Task(taskTitle, availableSlot.getStartTime(), availableSlotStart.plusMinutes(duration).toString(),description, deadline);
                     rescheduledTasks.add(task);
                     Log.d("GoogleCalendarOperations", "Task added to rescheduled tasks: " + task.getEntityTitle() + " " + task.getStartTime() + " " + task.getEndTime());
                     return rescheduledTasks;
@@ -83,7 +83,7 @@ public class FindFirstSlotForTask {
                         if (holdEntities.get(i).isReschedulable()) {
                             LocalDateTime holdEntityStart = LocalDateTime.parse(holdEntities.get(i).getStartTime());
                             int holdEntityDuration = holdEntities.get(i).getDurationMinutes();
-                            Task newTask = new Task(taskTitle, holdEntities.get(i).getStartTime(), holdEntityStart.plusMinutes(holdEntityDuration).toString());
+                            Task newTask = new Task(taskTitle, holdEntities.get(i).getStartTime(), holdEntityStart.plusMinutes(holdEntityDuration).toString(), deadline, description);
                             rescheduledTasks.add(newTask);
                             rescheduledTasks.add(SchedulerController.rescheduleTaskRequest((Task) holdEntities.get(i)));
                             break;

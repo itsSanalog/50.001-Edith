@@ -25,4 +25,7 @@ public class TaskRequest {
     public String getEntityName() {
         return entityName;
     }
+    public String getDescription() {
+        return entityDescription;
+    }
 }

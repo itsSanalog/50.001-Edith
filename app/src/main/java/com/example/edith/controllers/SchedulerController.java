@@ -36,6 +36,7 @@ public class SchedulerController {
         String deadline = taskRequest.getDeadline();
         // Get the duration from the task request
         int duration = taskRequest.getDuration();
+        String description = taskRequest.getDescription();
         Log.d("GoogleCalendarOperations", "Duration: " + duration + " Deadline: " + deadline);
         // Get the existing entities from the local storage
         List<Task> existingTasks = databaseOperations.getAllTasks();
@@ -45,9 +46,9 @@ public class SchedulerController {
         List<TimeSlot> availableSlots = FindAvailableSlots.getAvailableSlots(existingEntities, duration, deadline);
         Log.d("GoogleCalendarOperations", "Available slots have size: " + availableSlots.size());
         Log.d("GoogleCalendarOperations", "Available slots: " + availableSlots);
-        Log.d("GoogleCalendarOperations", "Available slots: " + availableSlots.get(0).getStartTime()+ " - " + availableSlots.get(0).getEndTime());
+        //Log.d("GoogleCalendarOperations", "Available slots: " + availableSlots.get(0).getStartTime()+ " - " + availableSlots.get(0).getEndTime());
         // Create an instance of FindFirstSlotForTask
-        return FindFirstSlotForTask.find(availableSlots, duration, deadline, taskRequest.getEntityName(), existingEntities);
+        return FindFirstSlotForTask.find(availableSlots, duration, deadline, taskRequest.getEntityName(), existingEntities, description);
         // Use the FindFirstSlotForTask algorithm to find the first available slot for the task and return the rescheduled entities
     }
     public static Task rescheduleTaskRequest(Task task) {

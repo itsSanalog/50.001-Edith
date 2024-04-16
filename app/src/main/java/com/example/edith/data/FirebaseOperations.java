@@ -127,6 +127,8 @@ public class FirebaseOperations implements DatabaseOperations {
         taskMap.put("start_time", task.getStartTime());
         taskMap.put("end_time", task.getEndTime());
         taskMap.put("timeSlot", task.getTimeSlot());
+        taskMap.put("updateRequired", task.getUpdateRequired());
+        Log.d("GoogleCalendarOperations1", String.valueOf(task.getDeadline()));
 
 
         taskDatabaseReference.document(task.getEntityID()).set(taskMap).addOnSuccessListener(new OnSuccessListener<Void>() {

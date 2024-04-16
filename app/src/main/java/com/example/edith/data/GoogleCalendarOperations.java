@@ -55,6 +55,9 @@ public class GoogleCalendarOperations {
                     .build();
 
             for (Task task : tasks) {
+                if (!task.getUpdateRequired()) {
+                    continue;
+                }
                 Event event = new Event()
                         .setSummary(task.getEntityTitle());
                 LocalDateTime startDateTime = LocalDateTime.parse(task.getStartTime()).minusHours(8);
@@ -80,6 +83,8 @@ public class GoogleCalendarOperations {
                     Log.e("GoogleCalendarOperations", "Error inserting event", e);
                     e.printStackTrace();
                 }
+                task.setUpdateRequired(false);
+                FirebaseOperations.getInstance().addTask(task);
 
                 System.out.printf("Event created: %s\n", event.getHtmlLink());
             }

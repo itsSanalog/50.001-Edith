@@ -11,6 +11,7 @@ public class CalendarEntity {
     private String description; //Optional
     //High=1, Medium=2, Low=3
     private int priority; //Optional
+    private boolean updateRequired;
 
 
     boolean isScheduled;
@@ -22,11 +23,14 @@ public class CalendarEntity {
         this.entityTitle = null;
         this.timeSlot = null;
         this.entityID = UUID.randomUUID().toString();
+        this.updateRequired = true;
     }
-    public CalendarEntity(String entityTitle, String startTime, String endTime) {
+    public CalendarEntity(String entityTitle, String startTime, String endTime, String description) {
         this.entityTitle = entityTitle;
         this.timeSlot = new TimeSlot(startTime,endTime);
         this.entityID = UUID.randomUUID().toString();
+        this.description = description;
+        this.updateRequired = true;
     }
 
     public void deleteCalendarEntity() {
@@ -61,7 +65,12 @@ public class CalendarEntity {
         timeSlot.setStartTime(startTime);
     }
 
-
+    public void setUpdateRequired(boolean updateRequired) {
+        this.updateRequired = updateRequired;
+    }
+    public boolean getUpdateRequired() {
+        return updateRequired;
+    }
 
     public String getDescription() {
         return description;
