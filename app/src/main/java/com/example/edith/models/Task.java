@@ -11,11 +11,13 @@ public class Task extends CalendarEntity {
     private boolean isOverdue;
     private String deadline;
     public Task() {
-        super(null,null,null);
+        super(null,null,null,null);
     }
 
-    public Task(String taskTitle, String startTime, String endTime) {
-        super(taskTitle, startTime, endTime);
+    public Task(String taskTitle, String startTime, String endTime, String description, String deadline) {
+        super(taskTitle, startTime, endTime, description);
+        this.deadline = deadline;
+        this.setType("Task");
     }
     public String getDeadline() {
         return deadline;

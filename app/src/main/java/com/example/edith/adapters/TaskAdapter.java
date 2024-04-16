@@ -41,7 +41,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     // Context object is the super class of MainActivity: See the Docs
     // constructor takes in the data class!
     public TaskAdapter(Context context, DatabaseOperations db){
-        FirebaseOperations dbOperations = new FirebaseOperations();
+        FirebaseOperations dbOperations = FirebaseOperations.getInstance();
         dbOperations.setAdapter(this);
         mInflater = LayoutInflater.from(context);
         this.context = context;
