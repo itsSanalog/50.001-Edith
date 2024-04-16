@@ -2,6 +2,7 @@ package com.example.edith.fragments;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -17,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -39,6 +41,7 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
     private EditText editTaskDescription;
     private NumberPicker editTaskDuration;
     private TextView updateDueDateText;
+    private TextView updateDeadlineTime;
     private Button updateTaskButton;
     private DatabaseOperations db;
     private Context context;
@@ -74,6 +77,7 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
         editTaskDescription = view.findViewById(R.id.editTaskDescription);
         editTaskDuration = view.findViewById(R.id.editDurationPicker);
         updateDueDateText = view.findViewById(R.id.updateDueDateTxt);
+        updateDeadlineTime = view.findViewById(R.id.updateDeadlineTime);
         updateTaskButton = view.findViewById(R.id.updateTaskButton);
 
         // get the database operations
@@ -105,9 +109,9 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
             editTaskDescription.setText(taskDescription);
             updateDueDateText.setText(dueDate);
 
-            if (taskTitle.length() > 0){
-                updateTaskButton.setEnabled(false);
-                updateTaskButton.setBackgroundColor(Color.GRAY);
+            if (taskTitle != null && taskTitle.length() > 0){
+                updateTaskButton.setEnabled(true);
+                updateTaskButton.setBackgroundColor(getResources().getColor(R.color.spacegrey));
             }
 
         }
@@ -156,6 +160,28 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
                 }, YEAR, MONTH, DAY);
 
                 datePickerDialog.show();
+            }
+        });
+
+        updateDeadlineTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                int HOUR = calendar.get(Calendar.HOUR);
+                int MINUTE = calendar.get(Calendar.MINUTE);
+
+                // show the time picker dialog
+                TimePickerDialog timePickerDialog = new TimePickerDialog(context, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        String time = hourOfDay + ":" + minute;
+                        updateDeadlineTime.setText(time);
+                    }
+                }, HOUR, MINUTE, true);
+
+                timePickerDialog.setTitle("Select Time");
+                timePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                timePickerDialog.show();
             }
         });
 

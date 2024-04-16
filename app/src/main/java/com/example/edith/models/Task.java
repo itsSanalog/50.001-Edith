@@ -26,7 +26,10 @@ public class Task extends CalendarEntity {
     public boolean isReschedulable() {
         return SchedulerController.checkIfTaskIsReschedulable(this);
     }
-
+    @Override
+    public String getEntityTitle() {
+        return super.getEntityTitle();
+    }
 
     public boolean isCompleted() {
         return isCompleted;

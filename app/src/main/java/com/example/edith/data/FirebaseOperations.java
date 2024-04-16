@@ -6,6 +6,7 @@ import androidx.annotation.IntegerRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.edith.adapters.TaskAdapter;
 import com.example.edith.models.CalendarEntity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -36,10 +37,11 @@ public class FirebaseOperations implements DatabaseOperations {
     private FirebaseFirestore firestore;
     private CollectionReference taskDatabaseReference;
     List<Task> taskList;
+    private TaskAdapter adapter;
     int size;
 
     // Create a private constructor: Singleton Design Pattern
-    private FirebaseOperations(){
+    public FirebaseOperations(){
         // Initialize the database
         firestore = FirebaseFirestore.getInstance();
         taskDatabaseReference = firestore.collection("tasks");
@@ -55,6 +57,9 @@ public class FirebaseOperations implements DatabaseOperations {
                 countListItems(value);
                 repopulateList(value);
                 Log.d(TAG, taskList.toString());
+                if (adapter != null){
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
     }
@@ -65,6 +70,10 @@ public class FirebaseOperations implements DatabaseOperations {
             instance = new FirebaseOperations();
         }
         return instance;
+    }
+
+    public void setAdapter(TaskAdapter adapter){
+        this.adapter = adapter;
     }
 
     // Count List
@@ -86,7 +95,9 @@ public class FirebaseOperations implements DatabaseOperations {
 
     // GetTask
     public Task getTask(int position){
-        Log.i("TaskAdapterDB", taskList.toString());
+        Log.i("TaskAdapterDB1", "test" + taskList.get(position).getEntityTitle());
+        Log.i("TaskAdapterDB2", "test" + taskList.get(position));
+
         return taskList.get(position);
     }
 
@@ -104,16 +115,16 @@ public class FirebaseOperations implements DatabaseOperations {
     public void addTask(Task task){
         Map<String, Object> taskMap = new HashMap<>();
         // Add task to the database
-        taskMap.put("id", task.getEntityID());
-        taskMap.put("title", task.getEntityTitle());
+        taskMap.put("entityID", task.getEntityID());
+        taskMap.put("entityTitle", task.getEntityTitle());
         taskMap.put("description", task.getDescription());
-        taskMap.put("status", task.isCompleted());
+        taskMap.put("isCompleted", task.isCompleted());
         taskMap.put("priority", task.getPriority());
         taskMap.put("deadline", task.getDeadline());
-        taskMap.put("duration", task.getDurationMinutes());
+        taskMap.put("durationMinutes", task.getDurationMinutes());
         taskMap.put("start_time", task.getStartTime());
         taskMap.put("end_time", task.getEndTime());
-        taskMap.put("TimeSlot", task.getTimeSlot());
+        taskMap.put("timeSlot", task.getTimeSlot());
 
         taskDatabaseReference.add(taskMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
@@ -168,16 +179,16 @@ public class FirebaseOperations implements DatabaseOperations {
     public void updateTask(Task task){
         Map<String, Object> taskMap = new HashMap<>();
         // Update task in the database
-        taskMap.put("id", task.getEntityID());
-        taskMap.put("title", task.getEntityTitle());
+        taskMap.put("entityID", task.getEntityID());
+        taskMap.put("entityTitle", task.getEntityTitle());
         taskMap.put("description", task.getDescription());
-        taskMap.put("status", task.isCompleted());
+        taskMap.put("isCompleted", task.isCompleted());
         taskMap.put("priority", task.getPriority());
         taskMap.put("deadline", task.getDeadline());
-        taskMap.put("duration", task.getDurationMinutes());
+        taskMap.put("durationMinutes", task.getDurationMinutes());
         taskMap.put("start_time", task.getStartTime());
         taskMap.put("end_time", task.getEndTime());
-        taskMap.put("TimeSlot", task.getTimeSlot());
+        taskMap.put("timeSlot", task.getTimeSlot());
 
         taskDatabaseReference.document(task.getEntityID()).set(taskMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -251,17 +262,26 @@ public class FirebaseOperations implements DatabaseOperations {
     }
 
     public int getSize(){
-        if (taskList == null){
-            Log.d("TaskAdapterDB", "Size is 0 ");
-            return 0;
-        }
-        Log.d("TaskAdapterDB", "Size: " + size);
+        taskDatabaseReference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if (taskList == null) {
+                    taskList = new ArrayList<>();
+                    taskList.addAll(queryDocumentSnapshots.toObjects(Task.class));
+                    Log.d(TAG, "If size taskList == null getSize is :  " + taskList.size());
+                }
+                size = taskList.size();
+                Log.d(TAG, "If size taskList is not null getSize is : " + size);
+
+
+//        if (taskList == null){
+//            repopulateList(taskDatabaseReference.get().getResult());
+//            Log.d(TAG, "If size taskList == null getSize is :  " + size);
+//        }
+//        Log.d(TAG, "If size taskList is not null getSize is : " + size);
+//        return size;
+            }
+        });
         return size;
     }
-
-
-
-
-
-
 }

@@ -2,6 +2,7 @@ package com.example.edith.fragments;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -17,6 +18,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,6 +46,7 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
     private EditText addTaskTitle;
     private EditText addTaskDescription;
     private TextView addTaskDate;
+    private TextView addTaskTime;
     private Button addButton;
     private NumberPicker addDuration;
     private Context context;
@@ -80,6 +83,7 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
         addTaskTitle = view.findViewById(R.id.addTaskTitle);
         addTaskDescription = view.findViewById(R.id.addTaskDescription);
         addTaskDate = view.findViewById(R.id.addDueDateTxt);
+        addTaskTime = view.findViewById(R.id.addDeadlineTime);
         addDuration = view.findViewById(R.id.durationPicker);
         addButton = view.findViewById(R.id.addTaskButton);
 
@@ -166,6 +170,29 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
                 datePickerDialog.show();
             }
         });
+
+        // Configure the Due Time TextView
+        addTaskTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                int HOUR = calendar.get(Calendar.HOUR_OF_DAY);
+                int MINUTE = calendar.get(Calendar.MINUTE);
+
+                TimePickerDialog timePickerDialog = new TimePickerDialog(context, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        String time = hourOfDay + ":" + minute;
+                        addTaskTime.setText(time);
+                    }
+                }, HOUR, MINUTE, true);
+
+                timePickerDialog.setTitle("Select Time");
+                timePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                timePickerDialog.show();
+            }
+        });
+
         // Configure the Add Button
         boolean finalIsUpdate = isUpdate;
         addButton.setOnClickListener(new View.OnClickListener() {

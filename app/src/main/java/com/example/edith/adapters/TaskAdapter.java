@@ -17,10 +17,12 @@ import android.widget.TextView;
 import com.example.edith.R;
 import com.example.edith.controllers.TaskController;
 import com.example.edith.data.DatabaseOperations;
+import com.example.edith.data.FirebaseOperations;
 import com.example.edith.fragments.UpdateTaskBottomFragment;
 import com.example.edith.models.Task;
 import com.example.edith.models.TaskRequests.deleteTaskRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
@@ -39,10 +41,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     // Context object is the super class of MainActivity: See the Docs
     // constructor takes in the data class!
     public TaskAdapter(Context context, DatabaseOperations db){
+        FirebaseOperations dbOperations = new FirebaseOperations();
+        dbOperations.setAdapter(this);
         mInflater = LayoutInflater.from(context);
         this.context = context;
         this.db = db;
-        Log.i("TaskAdapterDB", "TaskAdapter Constructor is : " + db);
     }
 
     @NonNull
@@ -84,13 +87,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         UpdateTaskBottomFragment updateTask = new UpdateTaskBottomFragment();
         updateTask.setArguments(bundle);
         updateTask.show(((FragmentActivity) context).getSupportFragmentManager(), updateTask.getTag());
-        Log.i("TaskAdapter", "Task ID:" + Task.getEntityID());
+        //Log.i("TaskAdapter", "Task ID:" + Task.getEntityID());
     }
 
     @Override
     public int getItemCount() {
         // return the number of data points
-        Log.d("TaskAdapterDB", "get size from adapter " + db.getSize());
+        Log.d("TaskAdapter", "get size from adapter " + db.getSize());
 
         return db.getSize();
     }
@@ -100,13 +103,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
         //TODO 2 get the data point at position from the data source and assign it to the Viewholder
         Task Task = db.getTask(position);
-        Log.i("TaskAdapter", db.getTask(position).toString());
-        //Log.i("TaskAdapter", "onBindViewHolder: " + Task.getEntityTitle() + " " + Task.getDescription() + " " + Task.getStartTime() + " " + Task.getEntityID() + " " + Task.isCompleted());
-        holder.taskName.setText(Task.getEntityTitle());
-        holder.taskDescription.setText(Task.getDescription());
-        holder.taskDate.setText("Do on " + Task.getStartTime());
+        Log.i("TaskAdapter", "The task at this position is : " + db.getTask(position).toString());
+        Log.d("TaskAdapter", "The task id of this is : " + db.getTask(position).getEntityID());
+        Log.d("TaskAdapter", "The task title of this is : " + db.getTask(position).getEntityTitle());
+        Log.d("TaskAdapter", "The task desc of this is : " + db.getTask(position).getDescription());
+        Log.d("TaskAdapter", "The task deadline of this is : " + db.getTask(position).getDeadline());
 
-        //Log.i("TaskAdapter", "onBindViewHolder: " + Task.getEntityTitle() + " " + Task.getDescription() + " " + Task.getStartTime() + " " + Task.getEntityID() + " " + Task.isCompleted());
+
+
+        holder.taskName.setText(db.getTask(position).getEntityTitle());
+        holder.taskDescription.setText(db.getTask(position).getDescription());
+        holder.taskDate.setText("Do on " + db.getTask(position).getStartTime());
 
         boolean isChecked = Task.isCompleted();
         holder.checkBox.setChecked(isChecked);
@@ -183,5 +190,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             return taskDate;
         }
     }
+
 
 }

@@ -8,6 +8,11 @@ public class TimeSlot {
     private String startTime;
     private String endTime;
     private int duration; //In minutes
+
+    public TimeSlot() {
+        this.startTime = null;
+        this.endTime = null;
+    }
     public TimeSlot(String startTime, String endTime) {
         this.startTime = startTime;
         this.endTime = endTime;
