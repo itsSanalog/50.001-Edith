@@ -60,6 +60,8 @@ public class GoogleCalendarOperations {
                 }
                 Event event = new Event()
                         .setSummary(task.getEntityTitle());
+                String encodedTaskID = task.getEntityID().replace("-", "");
+                event.setId(encodedTaskID);
                 LocalDateTime startDateTime = LocalDateTime.parse(task.getStartTime()).minusHours(8);
                 DateTime startDateTimeParsed = DateTime.parseRfc3339(startDateTime.toString());
                 EventDateTime start = new EventDateTime()
@@ -90,4 +92,26 @@ public class GoogleCalendarOperations {
             }
         }).start();
     }
+    public void deleteCalendarEntity(String id) {
+        String encodedID = id.replace("-", "");
+        Log.d("GoogleCalendarOperations2", "Deleting event: " + id);
+        new Thread(() -> {
+            Log.d("GoogleCalendarOperations2", "Thread to delete started");
+            Calendar service = new Calendar.Builder(
+                    AndroidHttp.newCompatibleTransport(),
+                    JacksonFactory.getDefaultInstance(),
+                    credential)
+                    .setApplicationName("Edith")
+                    .build();
+            try {
+                service.events().delete("primary", encodedID).execute();
+                Log.d("GoogleCalendarOperations2", "Event deleted: " + id);
+            } catch (IOException e) {
+                Log.e("GoogleCalendarOperations", "Error deleting event", e);
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    
 }

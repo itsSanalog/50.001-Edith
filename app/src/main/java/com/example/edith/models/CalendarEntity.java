@@ -12,6 +12,7 @@ public class CalendarEntity {
     //High=1, Medium=2, Low=3
     private int priority; //Optional
     private boolean updateRequired;
+    private String type;
 
 
     boolean isScheduled;
@@ -23,6 +24,7 @@ public class CalendarEntity {
         this.entityTitle = null;
         this.timeSlot = null;
         this.entityID = UUID.randomUUID().toString();
+        this.description = description;
         this.updateRequired = true;
     }
     public CalendarEntity(String entityTitle, String startTime, String endTime, String description) {
@@ -31,6 +33,7 @@ public class CalendarEntity {
         this.entityID = UUID.randomUUID().toString();
         this.description = description;
         this.updateRequired = true;
+        this.type = "CalendarEntity";
     }
 
     public void deleteCalendarEntity() {
@@ -56,7 +59,10 @@ public class CalendarEntity {
         return false;
     }
     public String getType() {
-        return "Entity";
+        return type;
+    }
+    public void setType(String type) {
+        this.type = type;
     }
     public int getDurationMinutes() {
         return (int) timeSlot.getDuration();

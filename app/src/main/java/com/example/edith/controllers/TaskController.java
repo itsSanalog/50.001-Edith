@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.edith.data.DatabaseOperations;
 import com.example.edith.data.FirebaseOperations;
+import com.example.edith.data.GoogleCalendarOperations;
 import com.example.edith.models.CalendarEntity;
 import com.example.edith.models.Task;
 import com.example.edith.models.TaskRequests.addTaskRequest;
@@ -43,6 +44,7 @@ public class TaskController {
 
     public static void deleteTask(deleteTaskRequest deleteTaskRequest) {
         FirebaseOperations.getInstance().removeTask(deleteTaskRequest.getId());
+        GoogleCalendarOperations.getInstance().deleteCalendarEntity(deleteTaskRequest.getId());
         Log.d("TaskController", deleteTaskRequest.getId());
     }
 }

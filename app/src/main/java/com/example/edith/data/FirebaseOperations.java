@@ -128,7 +128,7 @@ public class FirebaseOperations implements DatabaseOperations {
         taskMap.put("end_time", task.getEndTime());
         taskMap.put("timeSlot", task.getTimeSlot());
         taskMap.put("updateRequired", task.getUpdateRequired());
-        Log.d("GoogleCalendarOperations1", String.valueOf(task.getDeadline()));
+        taskMap.put("type", task.getType());
 
 
         taskDatabaseReference.document(task.getEntityID()).set(taskMap).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -195,6 +195,9 @@ public class FirebaseOperations implements DatabaseOperations {
         taskMap.put("start_time", task.getStartTime());
         taskMap.put("end_time", task.getEndTime());
         taskMap.put("timeSlot", task.getTimeSlot());
+        taskMap.put("updateRequired", task.getUpdateRequired());
+        taskMap.put("type", task.getType());
+
 
         taskDatabaseReference.document(task.getEntityID()).set(taskMap).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

@@ -17,6 +17,7 @@ public class Task extends CalendarEntity {
     public Task(String taskTitle, String startTime, String endTime, String description, String deadline) {
         super(taskTitle, startTime, endTime, description);
         this.deadline = deadline;
+        this.setType("Task");
     }
     public String getDeadline() {
         return deadline;
