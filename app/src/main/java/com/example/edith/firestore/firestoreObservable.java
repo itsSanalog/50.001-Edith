@@ -1,5 +1,7 @@
 package com.example.edith.firestore;
 
+import android.util.Log;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -47,6 +49,7 @@ public class firestoreObservable implements databaseObservable{
     public void notifyObservers() {
         for (databaseObserver observer : observers) {
             observer.update();
+            Log.d("firestoreObservable", "Notifying observers" + observer.toString());
         }
     }
 }
