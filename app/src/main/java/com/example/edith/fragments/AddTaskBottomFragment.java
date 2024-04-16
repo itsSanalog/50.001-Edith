@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -179,16 +180,16 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
                 int HOUR = calendar.get(Calendar.HOUR_OF_DAY);
                 int MINUTE = calendar.get(Calendar.MINUTE);
 
-                TimePickerDialog timePickerDialog = new TimePickerDialog(context, android.R.style.Theme_Holo_Light_Dialog, new TimePickerDialog.OnTimeSetListener() {
+                TimePickerDialog timePickerDialog = new TimePickerDialog(context, R.style.TimePickerDialogTheme, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         String time = hourOfDay + ":" + minute;
                         addTaskTime.setText(time);
                     }
-                }, HOUR, MINUTE, true);
+                }, HOUR, MINUTE, false);
 
                 timePickerDialog.setTitle("Select Time");
-                timePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                timePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.white);
                 timePickerDialog.show();
             }
         });

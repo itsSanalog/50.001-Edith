@@ -42,5 +42,6 @@ public class TaskController {
 
     public static void deleteTask(deleteTaskRequest deleteTaskRequest) {
         FirebaseOperations.getInstance().removeTask(deleteTaskRequest.getId());
+        Log.d("TaskController", deleteTaskRequest.getId());
     }
 }

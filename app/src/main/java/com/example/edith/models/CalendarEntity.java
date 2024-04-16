@@ -12,6 +12,7 @@ public class CalendarEntity {
     //High=1, Medium=2, Low=3
     private int priority; //Optional
 
+
     boolean isScheduled;
     boolean isStartDateTimeInFuture() {
         //Code out logic
@@ -38,7 +39,6 @@ public class CalendarEntity {
     public String getEndTime() {
         return timeSlot.getEndTime();
     }
-
     public String getEntityTitle() {
         return entityTitle;
     }

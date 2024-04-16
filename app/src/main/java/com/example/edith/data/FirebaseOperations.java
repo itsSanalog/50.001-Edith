@@ -126,9 +126,10 @@ public class FirebaseOperations implements DatabaseOperations {
         taskMap.put("end_time", task.getEndTime());
         taskMap.put("timeSlot", task.getTimeSlot());
 
-        taskDatabaseReference.add(taskMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+
+        taskDatabaseReference.document(task.getEntityID()).set(taskMap).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onComplete(@NonNull com.google.android.gms.tasks.Task<DocumentReference> task) {
+            public void onSuccess(Void aVoid) {
                 // Log success message
                 Log.d(TAG, "Task added successfully");
             }
@@ -161,12 +162,15 @@ public class FirebaseOperations implements DatabaseOperations {
     }
 
     public void removeTask(String id){
+
         // Remove task from the database
         taskDatabaseReference.document(id).delete().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull com.google.android.gms.tasks.Task<Void> task) {
                 // Log success message
                 Log.d(TAG, "Task removed successfully");
+                String ID = taskDatabaseReference.get().getResult().toString();
+                Log.d("removeTask", "ID: " + ID);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

@@ -100,14 +100,16 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
         if (bundle != null){
             isUpdate = true;
             id = bundle.getString("id");
-            String taskTitle = bundle.getString("title");
-            String taskDescription = bundle.getString("description");
-            String dueDate = bundle.getString("deadline");
+            String taskTitle = bundle.getString("taskTitle");
+            String taskDescription = bundle.getString("taskDescription");
+            String dueDate = bundle.getString("taskDueDate");
+            String deadlineTime = bundle.getString("taskDeadlineTime");
 
             // set the previous task details
             editTaskTitle.setText(taskTitle);
             editTaskDescription.setText(taskDescription);
             updateDueDateText.setText(dueDate);
+            updateDeadlineTime.setText(deadlineTime);
 
             if (taskTitle != null && taskTitle.length() > 0){
                 updateTaskButton.setEnabled(true);
