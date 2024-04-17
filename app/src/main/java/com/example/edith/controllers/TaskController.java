@@ -28,7 +28,7 @@ public class TaskController {
         //Get available slot from scheduler controller
         List<Task> entitiesToBeUpdated = SchedulerController.addTaskRequest(addTaskRequest);
         //Update entities in firebase
-        Log.d("GoogleCalendarOperations", "Entities to be updated in taskcontroller: " + entitiesToBeUpdated.size());
+        //Log.d("GoogleCalendarOperations", "Entities to be updated in taskcontroller: " + entitiesToBeUpdated.size());
 
         for (Task task : entitiesToBeUpdated) {
             //Update entity in firebase

@@ -30,7 +30,7 @@ public class FindAvailableSlots {
         while (currentTime.plusMinutes(duration).isBefore(deadlineLDT)) {
             TimeSlot potentialSlot = new TimeSlot(currentTime.toString(), duration);
 
-            if (isSlotAvailable(potentialSlot)) {
+            if (isSlotAvailable(potentialSlot,existingEntities)) {
                 availableSlots.add(potentialSlot);
             }
 
@@ -62,9 +62,7 @@ public class FindAvailableSlots {
      * @param potentialSlot The potential time slot to check.
      * @return A boolean value indicating whether the potential slot is available.
      */
-    public static boolean isSlotAvailable(TimeSlot potentialSlot) {
-        List<Task> existingTasks = FirebaseOperations.getInstance().getAllTasks();
-        List<CalendarEntity> existingEntities = new ArrayList<>(existingTasks);
+    public static boolean isSlotAvailable(TimeSlot potentialSlot, List<CalendarEntity> existingEntities) {
         for (CalendarEntity existingEntity : existingEntities) {
             LocalDateTime existingEntityStart = LocalDateTime.parse(existingEntity.getStartTime());
             LocalDateTime existingEntityEnd = LocalDateTime.parse(existingEntity.getEndTime());

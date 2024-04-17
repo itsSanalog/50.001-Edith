@@ -26,6 +26,7 @@ public interface DatabaseOperations {
 
     int getSize();
 
-    void repopulateList(QuerySnapshot snapshot);
+    void repopulateTaskList(QuerySnapshot snapshot);
+    void repopulateEventList(QuerySnapshot snapshot);
 
 }

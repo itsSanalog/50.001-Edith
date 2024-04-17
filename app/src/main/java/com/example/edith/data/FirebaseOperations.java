@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.example.edith.adapters.TaskAdapter;
 import com.example.edith.models.CalendarEntity;
+import com.example.edith.models.Event;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,7 +38,10 @@ public class FirebaseOperations implements DatabaseOperations {
     private static FirebaseOperations instance = null;
     private FirebaseFirestore firestore;
     private CollectionReference taskDatabaseReference;
+    private CollectionReference eventDatabaseReference;
+
     List<Task> taskList;
+    List<Event> eventList;
     private TaskAdapter adapter;
     int size;
 
@@ -46,6 +50,7 @@ public class FirebaseOperations implements DatabaseOperations {
         // Initialize the database
         firestore = FirebaseFirestore.getInstance();
         taskDatabaseReference = firestore.collection("tasks");
+        eventDatabaseReference = firestore.collection("events");
 
         // Get all tasks from the database
         taskDatabaseReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -56,11 +61,28 @@ public class FirebaseOperations implements DatabaseOperations {
                 }
                 Log.d(TAG, "Tasks: " + value);
                 countListItems(value);
-                repopulateList(value);
+                repopulateTaskList(value);
                 Log.d(TAG, taskList.toString());
                 if (adapter != null){
                     adapter.notifyDataSetChanged();
                 }
+                GoogleCalendarOperations.getInstance().syncCalendarEntities();
+            }
+        });
+
+        eventDatabaseReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null){
+                    Log.d(TAG, "Error getting events: " + error);
+                }
+                Log.d(TAG, "Events: " + value);
+                countListItems(value);
+                repopulateEventList(value);
+                Log.d(TAG, eventList.toString());
+//                if (adapter != null){
+//                    adapter.notifyDataSetChanged();
+//                }
                 GoogleCalendarOperations.getInstance().syncCalendarEntities();
             }
         });
@@ -86,12 +108,20 @@ public class FirebaseOperations implements DatabaseOperations {
 
     // Repopulate list
     @Override
-    public void repopulateList(QuerySnapshot snapshots){
+    public void repopulateTaskList(QuerySnapshot snapshots){
         taskList = new ArrayList<>();
 
         if (snapshots != null){
             taskList.addAll(snapshots.toObjects(Task.class));
-            Log.d("TaskAdapterDB", "Size: " + taskList.size());
+        }
+    }
+
+    @Override
+    public void repopulateEventList(QuerySnapshot snapshots){
+        eventList = new ArrayList<>();
+
+        if (snapshots != null){
+            eventList.addAll(snapshots.toObjects(Event.class));
         }
     }
 

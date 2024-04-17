@@ -35,6 +35,15 @@ public class CalendarEntity {
         this.updateRequired = true;
         this.type = "CalendarEntity";
     }
+    public CalendarEntity(String entityTitle, String startTime, String endTime, String description, String ID) {
+        this.entityTitle = entityTitle;
+        this.timeSlot = new TimeSlot(startTime,endTime);
+        this.entityID = ID;
+        this.description = description;
+        this.updateRequired = true;
+        this.type = "CalendarEntity";
+    }
+
 
     public void deleteCalendarEntity() {
         //Figure out how to delete from database
