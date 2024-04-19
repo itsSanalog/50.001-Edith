@@ -80,6 +80,25 @@
                 </com.google.android.material.textfield.TextInputEditText>
             </com.google.android.material.textfield.TextInputLayout>
 
+            <TextView
+                android:id="@+id/durationTxt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/spacegrey"
+                android:textStyle="bold"
+                android:text="Duration In Minutes">
+            </TextView>
+
+            <NumberPicker
+                android:id="@+id/editDurationPicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/editTaskDescriptionLayout"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp">
+            </NumberPicker>
+
             <Button
                 android:id="@+id/updateTaskButton"
                 android:layout_width="wrap_content"
@@ -98,10 +117,23 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|top"
                 android:layout_marginTop="-55dp"
-                android:text="Set Due Date"
+                android:text="Set Date"
                 android:textSize="22sp"
                 android:textColor="@color/spacegrey"
                 android:drawableRight="@drawable/ic_calendar"
+                android:drawablePadding="8dp"
+                android:drawableTint="@color/spacegrey">
+            </TextView>
+
+            <TextView
+                android:id="@+id/updateDeadlineTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start|top"
+                android:text="Set Time"
+                android:textSize="22sp"
+                android:textColor="@color/spacegrey"
+                android:drawableRight="@drawable/icons8_clock"
                 android:drawablePadding="8dp"
                 android:drawableTint="@color/spacegrey">
             </TextView>

@@ -1,10 +1,10 @@
 package com.example.edith.algorithms;
 
-import com.example.edith.models.Task;
+import com.example.edith.models.CalendarEntities.Task;
 import com.example.edith.models.TimeSlot;
 
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * This class is used to find a reschedule slot for a task in a calendar.
@@ -22,12 +22,12 @@ public class FindRescheduleSlotForTask {
      *
      * @return The task with updated start and end times. If no suitable slot is found, it returns null.
      */
-    public static Task find(ArrayList<TimeSlot> availableSlots, String name, Task task) {
+    public static Task find(List<TimeSlot> availableSlots, String name, Task task) {
         long duration = task.getDurationMinutes();
         for (TimeSlot slot : availableSlots) {
             if (slot.getDuration() >= duration) {
-                ZonedDateTime startTime = slot.getStartTime();
-                ZonedDateTime endTime = startTime.plusMinutes(duration);
+                String startTime = slot.getStartTime();
+                String endTime = LocalDateTime.parse(startTime).plusMinutes(duration).toString();
                 task.setStartTime(startTime);
                 task.setEndTime(endTime);
                 return task;

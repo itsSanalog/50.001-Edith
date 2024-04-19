@@ -1,4 +1,5 @@
 package com.example.edith.activities;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -23,13 +24,23 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.android.gms.common.api.Scope;
+
+/**
+ * LoginActivity is an activity class that handles the login process of the user.
+ * It uses Google Sign-In and Firebase Authentication for the login process.
+ */
 public class LoginActivity extends AppCompatActivity {
     public static final int GOOGLE_SIGN_IN_CODE = 10005;
     SignInButton signIn;
     GoogleSignInOptions gso;
     GoogleSignInClient signInClient;
 
-
+    /**
+     * This method is called when the activity is starting.
+     * It sets the content view, checks if the user is already logged in, and sets up Google Sign-In.
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle). Note: Otherwise it is null.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +54,9 @@ public class LoginActivity extends AppCompatActivity {
         signIn = findViewById(R.id.signIn);
 
         gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.web_client_id)).requestEmail().build();
+                .requestIdToken(getString(R.string.web_client_id)).requestEmail()
+                .requestScopes(new Scope("https://www.googleapis.com/auth/calendar"))
+                .build();
 
         signInClient = GoogleSignIn.getClient(this, gso);
 
@@ -51,9 +64,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if (signInAccount == null) {
             Toast.makeText(this, "Please Sign In", Toast.LENGTH_SHORT).show();
-        //startActivity(new Intent(this, MainActivity.class));
         }
-
 
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +75,13 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * This method is called when an activity you launched exits, giving you the requestCode you started it with, the resultCode it returned, and any additional data from it.
+     * It handles the result of the Google Sign-In process.
+     * @param requestCode The integer request code originally supplied to startActivityForResult(), allowing you to identify who this result came from.
+     * @param resultCode The integer result code returned by the child activity through its setResult().
+     * @param data An Intent, which can return result data to the caller (various data can be attached to Intent "extras").
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -73,6 +91,7 @@ public class LoginActivity extends AppCompatActivity {
 
             try {
                 GoogleSignInAccount signInAcc = signInTask.getResult(ApiException.class);
+                GoogleAccountHolder.getInstance().setAccount(signInAcc);
                 String idToken = signInAcc.getIdToken();
                 firebaseAuthWithGoogle(idToken);
             } catch (ApiException e) {
@@ -84,6 +103,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method is used to authenticate the user with Firebase using Google Sign-In.
+     * @param idToken The ID token from Google Sign-In.
+     */
     private void firebaseAuthWithGoogle(String idToken) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.signInWithCredential(GoogleAuthProvider.getCredential(idToken, null))
