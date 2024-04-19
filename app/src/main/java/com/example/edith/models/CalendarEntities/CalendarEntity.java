@@ -1,25 +1,30 @@
-package com.example.edith.models;
+package com.example.edith.models.CalendarEntities;
+
+import com.example.edith.models.TimeSlot;
 
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
+/**
+ * CalendarEntity is a class that represents a calendar entity with an entity ID, entity title, duration in minutes, time slot, description, priority, update requirement, type, and scheduling status.
+ * It provides constructors to initialize these values and methods to get and set these values.
+ */
 public class CalendarEntity {
     private final String entityID;
-    private String entityTitle; //Mandatory
-    private int durationMinutes; //Mandatory
-    private TimeSlot timeSlot; //Mandatory
-    private String description; //Optional
-    //High=1, Medium=2, Low=3
-    private int priority; //Optional
+    private String entityTitle;
+    private int durationMinutes;
+    private TimeSlot timeSlot;
+    private String description;
+    private int priority;
     private boolean updateRequired;
     private String type;
+    private boolean isScheduled;
 
 
-    boolean isScheduled;
-    boolean isStartDateTimeInFuture() {
-        //Code out logic
-        return true;
-    }
+    /**
+     * Default constructor for CalendarEntity.
+     * Initializes the entity ID with a random UUID and sets updateRequired to true.
+     */
     public CalendarEntity() {
         this.entityTitle = null;
         this.timeSlot = null;
@@ -27,6 +32,15 @@ public class CalendarEntity {
         this.description = description;
         this.updateRequired = true;
     }
+
+    /**
+     * Constructor for CalendarEntity.
+     * Initializes the entity title, time slot, entity ID, description, update requirement, and type with the provided values.
+     * @param entityTitle The title of the entity.
+     * @param startTime The start time of the time slot.
+     * @param endTime The end time of the time slot.
+     * @param description The description of the entity.
+     */
     public CalendarEntity(String entityTitle, String startTime, String endTime, String description) {
         this.entityTitle = entityTitle;
         this.timeSlot = new TimeSlot(startTime,endTime);
@@ -35,6 +49,16 @@ public class CalendarEntity {
         this.updateRequired = true;
         this.type = "CalendarEntity";
     }
+
+    /**
+     * Constructor for CalendarEntity.
+     * Initializes the entity title, time slot, entity ID, description, update requirement, and type with the provided values.
+     * @param entityTitle The title of the entity.
+     * @param startTime The start time of the time slot.
+     * @param endTime The end time of the time slot.
+     * @param description The description of the entity.
+     * @param ID The ID of the entity.
+     */
     public CalendarEntity(String entityTitle, String startTime, String endTime, String description, String ID) {
         this.entityTitle = entityTitle;
         this.timeSlot = new TimeSlot(startTime,endTime);
@@ -44,35 +68,47 @@ public class CalendarEntity {
         this.type = "CalendarEntity";
     }
 
+    // Getter methods to access the values
 
-    //Getter methods to access
     public String getStartTime() {
         return timeSlot.getStartTime();
     }
+
     public String getEndTime() {
         return timeSlot.getEndTime();
     }
+
     public String getEntityTitle() {
         return entityTitle;
     }
 
+    // Setter methods to update the values
+
     public void setEndTime(String endTime) {
         timeSlot.setEndTime(endTime);
     }
-    //Setter methods to update
+
+    /**
+     * Checks if the entity is reschedulable.
+     * @return false by default.
+     */
     public boolean isReschedulable() {
         //Not reschedulable by default
         return false;
     }
+
     public String getType() {
         return type;
     }
+
     public void setType(String type) {
         this.type = type;
     }
+
     public int getDurationMinutes() {
         return (int) timeSlot.getDuration();
     }
+
     public void setStartTime(String startTime) {
         timeSlot.setStartTime(startTime);
     }
@@ -80,6 +116,7 @@ public class CalendarEntity {
     public void setUpdateRequired(boolean updateRequired) {
         this.updateRequired = updateRequired;
     }
+
     public boolean getUpdateRequired() {
         return updateRequired;
     }
@@ -91,6 +128,7 @@ public class CalendarEntity {
     public int getPriority() {
         return priority;
     }
+
     public boolean isScheduled() {
         return isScheduled;
     }
@@ -122,5 +160,4 @@ public class CalendarEntity {
     public TimeSlot getTimeSlot(){
         return timeSlot;
     }
-
 }

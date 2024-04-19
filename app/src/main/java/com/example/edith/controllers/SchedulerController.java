@@ -1,8 +1,5 @@
 package com.example.edith.controllers;
 
-import android.os.AsyncTask;
-import android.util.Log;
-
 import com.example.edith.algorithms.CanCalendarEntityFitInSlots;
 import com.example.edith.algorithms.FindAvailableSlots;
 import com.example.edith.algorithms.FindFirstSlotForTask;
@@ -10,14 +7,11 @@ import com.example.edith.algorithms.FindRescheduleSlotForTask;
 import com.example.edith.data.DatabaseOperations;
 import com.example.edith.data.FirebaseOperations;
 import com.example.edith.data.GoogleCalendarListener;
-import com.example.edith.models.CalendarEntity;
-import com.example.edith.models.Task;
+import com.example.edith.models.CalendarEntities.CalendarEntity;
+import com.example.edith.models.CalendarEntities.Task;
 import com.example.edith.models.TaskRequests.TaskRequest;
 import com.example.edith.models.TimeSlot;
 
-import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +47,14 @@ public class SchedulerController {
         return FindFirstSlotForTask.find(availableSlots, duration, deadline, taskRequest.getEntityName(), existingEntities, description);
         // Use the FindFirstSlotForTask algorithm to find the first available slot for the task and return the rescheduled entities
     }
+
+    /**
+     * This method is responsible for rescheduling a task.
+     * It uses the FindAvailableSlots and FindRescheduleSlotForTask algorithms to achieve this.
+     *
+     * @param task The task to be rescheduled.
+     * @return The rescheduled task, or null if the task cannot be rescheduled.
+     */
     public static Task rescheduleTaskRequest(Task task) {
         DatabaseOperations databaseOperations = FirebaseOperations.getInstance();
         if (checkIfTaskIsReschedulable(task)) {
@@ -71,6 +73,13 @@ public class SchedulerController {
         }
         return null;
     }
+    /**
+     * This method checks if a task can be rescheduled.
+     * It uses the CanCalendarEntityFitInSlots algorithm to achieve this.
+     *
+     * @param task The task to check.
+     * @return true if the task can be rescheduled, false otherwise.
+     */
     public static boolean checkIfTaskIsReschedulable(Task task) {
         DatabaseOperations databaseOperations = FirebaseOperations.getInstance();
         String deadline = task.getDeadline();

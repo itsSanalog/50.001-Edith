@@ -1,30 +1,30 @@
 package com.example.edith.algorithms;
 
-import com.example.edith.models.CalendarEntity;
+import com.example.edith.models.CalendarEntities.CalendarEntity;
 import com.example.edith.models.TimeSlot;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class provides a method to check if a CalendarEntity can fit into any of the available TimeSlots.
+ */
 public class CanCalendarEntityFitInSlots {
-    ArrayList<TimeSlot> availableSlots;
-    CalendarEntity calendarEntity;
-    public CanCalendarEntityFitInSlots(){
-    }
+
+    /**
+     * Checks if a CalendarEntity can fit into any of the available TimeSlots.
+     *
+     * @param availableSlots A list of available TimeSlots.
+     * @param calendarEntity The CalendarEntity to check.
+     * @return true if the CalendarEntity can fit into any of the TimeSlots, false otherwise.
+     */
     public static boolean canFit(List<TimeSlot> availableSlots, CalendarEntity calendarEntity){
-        boolean canFit = false;
-        for (TimeSlot slot : availableSlots) {
-            LocalDateTime calendarEntityStart = LocalDateTime.parse(calendarEntity.getStartTime());
-            LocalDateTime calendarEntityEnd = LocalDateTime.parse(calendarEntity.getEndTime());
+        LocalDateTime calendarEntityStart = LocalDateTime.parse(calendarEntity.getStartTime());
+        LocalDateTime calendarEntityEnd = LocalDateTime.parse(calendarEntity.getEndTime());
+
+        return availableSlots.stream().anyMatch(slot -> {
             LocalDateTime slotStart = LocalDateTime.parse(slot.getStartTime());
             LocalDateTime slotEnd = LocalDateTime.parse(slot.getEndTime());
-            if (calendarEntityStart.isAfter(slotStart) && calendarEntityEnd.isBefore(slotEnd)) {
-                canFit = true;
-                break;
-            }
-        }
-        return canFit;
+            return calendarEntityStart.isAfter(slotStart) && calendarEntityEnd.isBefore(slotEnd);
+        });
     }
-
 }

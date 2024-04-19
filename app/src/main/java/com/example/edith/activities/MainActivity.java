@@ -1,6 +1,6 @@
 package com.example.edith.activities;
+
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
@@ -8,7 +8,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.RecyclerView.Adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -27,7 +26,6 @@ import com.example.edith.data.FirebaseOperations;
 import com.example.edith.data.GoogleCalendarListener;
 import com.example.edith.data.GoogleCalendarOperations;
 import com.example.edith.fragments.AddTaskBottomFragment;
-import com.example.edith.models.Task;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -36,16 +34,13 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
-import java.util.List;
-
+/**
+ * MainActivity is an activity class that handles the main screen of the application.
+ * It sets up the navigation drawer, toolbar, and RecyclerView for tasks.
+ * It also handles the sign out process.
+ */
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public DrawerLayout drawerLayout;
@@ -54,6 +49,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public ActionBarDrawerToggle actionBarDrawerToggle;
     FirebaseFirestore firestore;
 
+    /**
+     * This method is called when the activity is starting.
+     * It sets the content view, checks if the user is already logged in, and sets up the RecyclerView, toolbar, and navigation drawer.
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down then this Bundle contains the data it most recently supplied in onSaveInstanceState(Bundle). Note: Otherwise it is null.
+     */
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(this, LoginActivity.class));
             this.finish();
         }
-
 
         // < finding elements >
         // TextView for intro
@@ -82,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         FloatingActionButton fab = findViewById(R.id.fab);
         setSupportActionBar(toolbar);
-
 
         // drawer layout instance to toggle the menu icon back open
         // drawer and back button to close drawer
@@ -137,15 +135,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         GoogleCalendarOperations.getInstance().setAccount(account, this);
         GoogleCalendarListener.getInstance().setAccount(account, this);
-
-
     }
 
-    // to Override the onOptionsItemSelected()
-    // function to implement
-    // the item click listener callback
-    // to open and close the navigation
-    // drawer when the icon is clicked
+    /**
+     * This method is called whenever an item in the options menu is selected.
+     * It handles the action bar item clicks.
+     * @param item The menu item that was selected.
+     * @return boolean Return false to allow normal menu processing to proceed, true to consume it here.
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
@@ -154,6 +151,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * This method is called whenever a navigation item is selected.
+     * It handles the navigation view item clicks.
+     * @param item The selected item
+     * @return boolean Return true to display the item as the selected item.
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item selected here
@@ -167,6 +170,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    /**
+     * This method is used to log out the user.
+     * It signs out the user from Google Sign-In and Firebase Authentication, and then starts the LoginActivity.
+     * @param view The view that was clicked.
+     */
     public void logout(View view) {
 
         GoogleSignIn.getClient(this,
@@ -177,7 +185,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         Toast.makeText(MainActivity.this, "Signout Successful.",
                                 Toast.LENGTH_SHORT).show();
                         // Finish current activity to prevent going back.
-                        //finish();     // OPTIONAL
                         FirebaseAuth.getInstance().signOut();
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
 

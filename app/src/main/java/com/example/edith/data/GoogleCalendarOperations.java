@@ -1,11 +1,9 @@
 package com.example.edith.data;
 
-
 import android.content.Context;
 import android.util.Log;
 
-import com.example.edith.activities.MainActivity;
-import com.example.edith.models.Task;
+import com.example.edith.models.CalendarEntities.Task;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
@@ -20,21 +18,38 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
+/**
+ * This class handles operations related to Google Calendar.
+ * It follows the Singleton Design Pattern.
+ */
 public class GoogleCalendarOperations {
     private GoogleSignInAccount account;
     private static GoogleCalendarOperations instance;
     private GoogleAccountCredential credential;
-    // Singleton pattern
+
+    /**
+     * Private constructor for Singleton Design Pattern.
+     */
     private GoogleCalendarOperations() {
     }
+
+    /**
+     * Creates a singleton instance of the class.
+     * @return the singleton instance.
+     */
     public static GoogleCalendarOperations getInstance() {
         if (instance == null){
             instance = new GoogleCalendarOperations();
         }
         return instance;
     }
+
+    /**
+     * Sets the GoogleSignInAccount and creates a GoogleAccountCredential for it.
+     * @param account the GoogleSignInAccount to set.
+     * @param context the context in which the GoogleAccountCredential is created.
+     */
     public void setAccount(GoogleSignInAccount account, Context context) {
         this.account = account;
         this.credential = GoogleAccountCredential.usingOAuth2(
@@ -43,6 +58,10 @@ public class GoogleCalendarOperations {
                 .setSelectedAccountName(account.getEmail());
     }
 
+    /**
+     * Syncs the tasks from Firebase with Google Calendar.
+     * This method runs on a new thread.
+     */
     public void syncCalendarEntities() {
         new Thread(() -> {
             List<Task> tasks = FirebaseOperations.getInstance().getAllTasks();
@@ -89,6 +108,12 @@ public class GoogleCalendarOperations {
             }
         }).start();
     }
+
+    /**
+     * Deletes a calendar entity from Google Calendar.
+     * This method runs on a new thread.
+     * @param id the ID of the calendar entity to delete.
+     */
     public void deleteCalendarEntity(String id) {
         String encodedID = id.replace("-", "");
         new Thread(() -> {
@@ -105,6 +130,4 @@ public class GoogleCalendarOperations {
             }
         }).start();
     }
-
-    
 }

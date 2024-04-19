@@ -36,6 +36,10 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
+/**
+ * UpdateTaskBottomFragment is a BottomSheetDialogFragment that handles the updating of existing tasks.
+ * It provides a form for the user to edit the task details.
+ */
 public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
 
     public static final String TAG = "UpdateTaskBottomFragment";
@@ -51,28 +55,45 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
     private Context context;
     private String dueDateUpdate;
 
-    // constructor: create new instance of UpdateTaskBottomFragment
+    /**
+     * Creates a new instance of UpdateTaskBottomFragment.
+     * @return a new instance of UpdateTaskBottomFragment.
+     */
     public static UpdateTaskBottomFragment newInstance() {
         return new UpdateTaskBottomFragment();
     }
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return Return the View for the fragment's UI, or null.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // inflate the layout for this fragment
+        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.update_task_dialog, container, false);
         // Configure UI elements
         return view;
     }
 
-    // onSaveInstanceState: save the state of the fragment
+    /**
+     * Called to ask the fragment to save its current dynamic state, so it can later be reconstructed in a new instance of its process is restarted.
+     * @param outState Bundle in which to place your saved state.
+     */
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBundle("bundle", getArguments());
     }
 
-    // onViewCreated: called when the view is created
+    /**
+     * Called immediately after onCreateView(LayoutInflater, ViewGroup, Bundle) has returned, but before any saved state has been restored in to the view.
+     * @param view The View returned by onCreateView(LayoutInflater, ViewGroup, Bundle).
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -91,7 +112,6 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
         editTaskDuration.setMinValue(1); // Minimum duration
         editTaskDuration.setMaxValue(120); // Maximum duration
 
-        // TODO: get the previous task details, check with Andrew
         // get the previous task details
         boolean isUpdate = false;
         Bundle bundle;
@@ -141,7 +161,6 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
             }
         });
 
-        // TODO: set the onClickListener for the updateTaskButton
         updateDueDateText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,10 +217,8 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
                 String taskDueDate = localDateTime.toString();
 
 
-                // TODO: pass the fields to TaskRequest
                 updateTaskRequest updateTaskRequest = new updateTaskRequest(id, taskTitle, taskDescription, taskDueDate, taskDuration);
                 if (id != null && finalIsUpdate){
-                    // TODO: update the task by calling the Task controller passing in the fields
                     TaskController.updateTask(updateTaskRequest);
                     dismiss();
                 }
@@ -210,12 +227,20 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
 
     }
 
+    /**
+     * Called when a fragment is first attached to its context.
+     * @param context The context being attached to.
+     */
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
     }
 
+    /**
+     * This method will be invoked when the dialog is dismissed.
+     * @param dialog The dialog that was dismissed will be passed into the method.
+     */
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);

@@ -19,17 +19,18 @@ import com.example.edith.controllers.TaskController;
 import com.example.edith.data.DatabaseOperations;
 import com.example.edith.data.FirebaseOperations;
 import com.example.edith.fragments.UpdateTaskBottomFragment;
-import com.example.edith.models.Task;
+import com.example.edith.models.CalendarEntities.Task;
 import com.example.edith.models.TaskRequests.deleteTaskRequest;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
-
+/**
+ * TaskAdapter is a RecyclerView.Adapter that binds the data to the RecyclerView.
+ * It handles the deletion and editing of tasks.
+ */
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder>{
 
     private FirebaseFirestore firestore;
@@ -38,8 +39,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     LayoutInflater mInflater;
     Context context;
 
-    // Context object is the super class of MainActivity: See the Docs
-    // constructor takes in the data class!
+    /**
+     * Constructor for TaskAdapter.
+     * @param context The context in which the TaskAdapter is used.
+     * @param db The database operations instance.
+     */
     public TaskAdapter(Context context, DatabaseOperations db){
         FirebaseOperations dbOperations = FirebaseOperations.getInstance();
         dbOperations.setAdapter(this);
@@ -50,30 +54,33 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     @NonNull
     @Override
-    // Tell android what/where your layout for each list item is
-    // Creates an instance of the layout and TaskHolder in memory
+    /**
+     * Called when RecyclerView needs a new RecyclerView.ViewHolder of the given type to represent an item.
+     * @param parent The ViewGroup into which the new View will be added after it is bound to an adapter position.
+     * @param viewType The view type of the new View.
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
     public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        /** this is pretty much standard code so we will leave it here
-         *  inflates the xml layout for each list item and is ready for the data to be added */
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_task_layout, parent, false);
-        //View itemView = mInflater.inflate(R.layout.view_task_layout, parent, false);
-        //firestore = FirebaseFirestore.getInstance();
         return new TaskViewHolder(itemView, this);
     }
 
-
+    /**
+     * Deletes a task from the RecyclerView and the database.
+     * @param position The position of the task in the RecyclerView.
+     */
     public void deleteTask(int position){
-        // position automatically provided by RecyclerView, and should be a list? provided by db
         Task Task = db.getTask(position);
-        Log.d("DeleteTask", "Task.getEntityID is :" + db.getTask(position).getEntityID());
         TaskController taskController = new TaskController();
         deleteTaskRequest deleteTaskRequest = new deleteTaskRequest(db.getTask(position).getEntityID());
         taskController.deleteTask(deleteTaskRequest);
-
-        //db.removeTask(Task.getEntityID());
         notifyItemRemoved(position);
     }
 
+    /**
+     * Opens the UpdateTaskBottomFragment for the task at the given position.
+     * @param position The position of the task in the RecyclerView.
+     */
     public void editTask(int position){
         Task Task = db.getTask(position);
 
@@ -82,39 +89,31 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         bundle.putString("taskDescription", db.getTask(position).getDescription());
         bundle.putString("taskDueDate", db.getTask(position).getDate());
         bundle.putString("taskDeadlineTime", db.getTask(position).getTime());
-        // TODO : add back after startTime is converted to String
-        //bundle.putString("taskDueDate", Task.getStartTime());
-        //bundle.putString("orderDate", Task.getOrderDate());
         bundle.putString("id", db.getTask(position).getEntityID());
 
         UpdateTaskBottomFragment updateTask = new UpdateTaskBottomFragment();
         updateTask.setArguments(bundle);
 
-        Log.d("EditTask", bundle.getString("taskTitle"));
         updateTask.show(((FragmentActivity) context).getSupportFragmentManager(), updateTask.getTag());
-        //Log.i("TaskAdapter", "Task ID:" + Task.getEntityID());
     }
 
     @Override
+    /**
+     * Returns the total number of items in the data set held by the adapter.
+     * @return The total number of items in this adapter.
+     */
     public int getItemCount() {
-        // return the number of data points
-        Log.d("TaskAdapter", "get size from adapter " + db.getSize());
-
         return db.getSize();
     }
 
     @Override
-    // Tell android what data you want to go on which widget in the layout of the list item
+    /**
+     * Called by RecyclerView to display the data at the specified position.
+     * @param holder The ViewHolder which should be updated to represent the contents of the item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     public void onBindViewHolder(@NonNull TaskViewHolder holder, int position) {
-        //TODO 2 get the data point at position from the data source and assign it to the Viewholder
         Task Task = db.getTask(position);
-        Log.i("TaskAdapter", "The task at this position is : " + db.getTask(position).toString());
-        Log.d("TaskAdapter", "The task id of this is : " + db.getTask(position).getEntityID());
-        Log.d("TaskAdapter", "The task title of this is : " + db.getTask(position).getEntityTitle());
-        Log.d("TaskAdapter", "The task desc of this is : " + db.getTask(position).getDescription());
-        Log.d("TaskAdapter", "The task deadline of this is : " + db.getTask(position).getDeadline());
-
-
 
         holder.taskName.setText(db.getTask(position).getEntityTitle());
         holder.taskDescription.setText(db.getTask(position).getDescription());
@@ -123,9 +122,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         boolean isChecked = Task.isCompleted();
         holder.checkBox.setChecked(isChecked);
 
-        //holder.checkBox.setChecked(toBoolean(Task.getTaskStatus()));
-
-        // Apply or remove the strikethrough effect based on the task's status
         if (isChecked) {
             holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         } else {
@@ -137,20 +133,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked){
                     db.updateTaskStatus(Task.getEntityID(), true);
-                    //firestore.collection("tasks").document(Task.TaskID).update("taskStatus", 1);
                     holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
                 }
                 else {
                     db.updateTaskStatus(Task.getEntityID(), false);
-                    //firestore.collection("tasks").document(Task.TaskID).update("taskStatus", 0);
                     holder.taskName.setPaintFlags(holder.taskName.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
                 }
             }
         });
     }
 
-
-
+    /**
+     * A ViewHolder describes an item view and metadata about its place within the RecyclerView.
+     */
     public static class TaskViewHolder extends RecyclerView.ViewHolder {
         private TextView taskName;
         private TextView taskDescription;
@@ -159,6 +154,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         private ImageView deleteTask;
         private ImageView editTask;
 
+        /**
+         * Constructor for TaskViewHolder.
+         * @param itemView The view that represents the data.
+         * @param adapter The adapter that binds the data to the RecyclerView.
+         */
         public TaskViewHolder(@NonNull View itemView, TaskAdapter adapter) {
             super(itemView);
             taskName = itemView.findViewById(R.id.titleTxt);
@@ -195,6 +195,4 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             return taskDate;
         }
     }
-
-
 }

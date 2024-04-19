@@ -1,11 +1,9 @@
 package com.example.edith.algorithms;
 
-import com.example.edith.models.Task;
+import com.example.edith.models.CalendarEntities.Task;
 import com.example.edith.models.TimeSlot;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

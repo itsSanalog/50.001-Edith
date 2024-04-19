@@ -1,30 +1,37 @@
 package com.example.edith.algorithms;
 
-import android.util.Log;
-
 import com.example.edith.controllers.SchedulerController;
 import com.example.edith.data.FirebaseOperations;
-import com.example.edith.models.CalendarEntity;
-import com.example.edith.models.Task;
+import com.example.edith.models.CalendarEntities.CalendarEntity;
+import com.example.edith.models.CalendarEntities.Task;
 import com.example.edith.models.TimeSlot;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-
+/**
+ * This class provides a method to find the first available slot for a task.
+ */
 public class FindFirstSlotForTask {
     public FindFirstSlotForTask() {
     }
 
-    // Given a list of available time slots, a task duration, a deadline, a task name, and a list of calendar entities,
-    // this method finds the first available time slot that can accommodate the task.
-    // If no available slot exists, it attempts to rearrange the existing tasks to make space for the new task.
-    // It returns an ArrayList of Task objects representing the rescheduled tasks after the new task has been scheduled.
+    /**
+     * Given a list of available time slots, a task duration, a deadline, a task name, and a list of calendar entities,
+     * this method finds the first available time slot that can accommodate the task.
+     * If no available slot exists, it attempts to rearrange the existing tasks to make space for the new task.
+     * It returns an ArrayList of Task objects representing the rescheduled tasks after the new task has been scheduled.
+     *
+     * @param availableSlots A list of available time slots.
+     * @param duration The duration of the task.
+     * @param deadline The deadline for the task.
+     * @param taskTitle The title of the task.
+     * @param calendarEntities A list of existing calendar entities.
+     * @param description The description of the task.
+     * @return An ArrayList of Task objects representing the rescheduled tasks after the new task has been scheduled.
+     */
     public static List<Task> find(List<TimeSlot> availableSlots, int duration, String deadline, String taskTitle, List<CalendarEntity> calendarEntities, String description) {
         LocalDateTime deadlineLDT = LocalDateTime.parse(deadline);
         LocalDateTime now = LocalDateTime.now();
@@ -45,9 +52,7 @@ public class FindFirstSlotForTask {
         }
         //If no available slot exists
         //Attempt to rearrange the existing tasks to make space for the new task
-
         ArrayList<Task> holdEntities = new ArrayList<>();
-
         for (Task task : FirebaseOperations.getInstance().getAllTasks()) {
             if (task.getType().equals("Task")) {
                 holdEntities.add(task);
@@ -56,7 +61,6 @@ public class FindFirstSlotForTask {
         }
 
 
-        List<TimeSlot> availableSlots2 = FindAvailableSlots.getAvailableSlots(calendarEntities, duration, deadline);
         holdEntities.sort((e1, e2) -> Long.compare(e2.getDurationMinutes(), e1.getDurationMinutes()));
         boolean isPlaced = false;
         for (Task holdEntity : holdEntities) {

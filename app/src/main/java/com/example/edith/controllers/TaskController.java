@@ -1,54 +1,69 @@
 package com.example.edith.controllers;
 
-import android.util.Log;
-
 import com.example.edith.data.DatabaseOperations;
 import com.example.edith.data.FirebaseOperations;
 import com.example.edith.data.GoogleCalendarOperations;
-import com.example.edith.models.CalendarEntity;
-import com.example.edith.models.Task;
+import com.example.edith.models.CalendarEntities.Task;
 import com.example.edith.models.TaskRequests.addTaskRequest;
 import com.example.edith.models.TaskRequests.deleteTaskRequest;
 import com.example.edith.models.TaskRequests.updateTaskRequest;
 
-import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class is responsible for managing tasks.
+ */
 public class TaskController {
-
-
+    /**
+     * Default constructor.
+     * Sets Firebase as the database operations instance.
+     */
     public TaskController() {
-        // Set Firebase as database operations
         DatabaseOperations databaseOperations = FirebaseOperations.getInstance();
     }
 
-    // Add taskRequest to be passed into here.
+    /**
+     * Adds a task based on the provided task request.
+     * It sends the task request to the SchedulerController, gets the available slot,
+     * and updates the entities in Firebase.
+     *
+     * @param addTaskRequest The task request object containing the details of the task.
+     */
     public static void addTask(addTaskRequest addTaskRequest) {
-        //Send task request to scheduler controller
-        //Get available slot from scheduler controller
         List<Task> entitiesToBeUpdated = SchedulerController.addTaskRequest(addTaskRequest);
-        //Update entities in firebase
         for (Task task : entitiesToBeUpdated) {
-            //Update entity in firebase
             FirebaseOperations.getInstance().addTask(task);
-
         }
     }
 
-    // Update taskRequest to be passed into here.
+    /**
+     * Updates a task based on the provided task request.
+     * It deletes the existing task and adds a new task with the updated details.
+     *
+     * @param updateTaskRequest The task request object containing the updated details of the task.
+     */
     public static void updateTask(updateTaskRequest updateTaskRequest) {
+        // Get details from updateTaskRequest
         String id = updateTaskRequest.getId();
         String entityName = updateTaskRequest.getEntityName();
         String entityDescription = updateTaskRequest.getEntityDescription();
         String taskDeadline = updateTaskRequest.getTaskDeadline();
         int duration = updateTaskRequest.getDuration();
 
+        // Create deleteTaskRequest and send to TaskController
         deleteTaskRequest deleteTaskRequest = new deleteTaskRequest(id);
         TaskController.deleteTask(deleteTaskRequest);
+        // Create addTaskRequest and send to TaskController
         addTaskRequest addTaskRequest = new addTaskRequest(entityName, entityDescription, taskDeadline, duration);
         TaskController.addTask(addTaskRequest);
     }
 
+    /**
+     * Deletes a task based on the provided task request.
+     * It removes the task from Firebase and Google Calendar.
+     *
+     * @param deleteTaskRequest The task request object containing the ID of the task to be deleted.
+     */
     public static void deleteTask(deleteTaskRequest deleteTaskRequest) {
         FirebaseOperations.getInstance().removeTask(deleteTaskRequest.getId());
         GoogleCalendarOperations.getInstance().deleteCalendarEntity(deleteTaskRequest.getId());

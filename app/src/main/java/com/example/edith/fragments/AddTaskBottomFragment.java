@@ -56,16 +56,26 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
     private Context context;
     private String dueDate = "";
 
-    // TODO: Do not know if it is necessary
     private String dueDateUpdate = "";
     private FirebaseFirestore firestore;
     private String orderDate = "";
     private String orderDateUpdate = "";
 
+    /**
+     * Creates a new instance of AddTaskBottomFragment.
+     * @return a new instance of AddTaskBottomFragment.
+     */
     private static AddTaskBottomFragment newInstance() {
         return new AddTaskBottomFragment();
     }
 
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     * @param inflater The LayoutInflater object that can be used to inflate any views in the fragment.
+     * @param container If non-null, this is the parent view that the fragment's UI should be attached to.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     * @return Return the View for the fragment's UI, or null.
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -75,12 +85,21 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
         return view;
     }
 
+    /**
+     * Called to ask the fragment to save its current dynamic state, so it can later be reconstructed in a new instance of its process is restarted.
+     * @param outState Bundle in which to place your saved state.
+     */
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBundle("taskBundle", getArguments());
     }
 
+    /**
+     * Called immediately after onCreateView(LayoutInflater, ViewGroup, Bundle) has returned, but before any saved state has been restored in to the view.
+     * @param view The View returned by onCreateView(LayoutInflater, ViewGroup, Bundle).
+     * @param savedInstanceState If non-null, this fragment is being re-constructed from a previous saved state as given here.
+     */
     @Override
    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -99,7 +118,6 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
         addDuration.setMaxValue(120); // Maximum duration
 
 
-        // TODO: Not necessary for AddTaskBottom Fragment check with Andrew
         // Configuring the Update Task
         boolean isUpdate = false;
         Bundle bundle;
@@ -241,12 +259,20 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
         });
     }
 
+    /**
+     * Called when a fragment is first attached to its context.
+     * @param context The context being attached to.
+     */
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         this.context = context;
     }
 
+    /**
+     * This method will be invoked when the dialog is dismissed.
+     * @param dialog The dialog that was dismissed will be passed into the method.
+     */
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
