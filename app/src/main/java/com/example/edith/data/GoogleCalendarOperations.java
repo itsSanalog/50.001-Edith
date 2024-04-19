@@ -68,9 +68,7 @@ public class GoogleCalendarOperations {
                         .setDateTime(startDateTimeParsed)
                         .setTimeZone("Asia/Singapore");
                 event.setStart(start);
-                Log.d("GoogleCalendarOperations","GoogleCalendarOperations start date time" + startDateTime.toString());
 
-                Log.d("GoogleCalendarOperations","GoogleCalendarOperations start time" + start.toString());
                 LocalDateTime endDateTime = LocalDateTime.parse(task.getEndTime()).minusHours(8);
                 DateTime endDateTimeParsed = DateTime.parseRfc3339(endDateTime.toString());
                 EventDateTime end = new EventDateTime()
@@ -82,7 +80,6 @@ public class GoogleCalendarOperations {
                 try {
                     event = service.events().insert("primary", event).execute();
                 } catch (IOException e) {
-                    Log.e("GoogleCalendarOperations", "Error inserting event", e);
                     e.printStackTrace();
                 }
                 task.setUpdateRequired(false);
@@ -94,9 +91,7 @@ public class GoogleCalendarOperations {
     }
     public void deleteCalendarEntity(String id) {
         String encodedID = id.replace("-", "");
-        Log.d("GoogleCalendarOperations2", "Deleting event: " + id);
         new Thread(() -> {
-            Log.d("GoogleCalendarOperations2", "Thread to delete started");
             Calendar service = new Calendar.Builder(
                     AndroidHttp.newCompatibleTransport(),
                     JacksonFactory.getDefaultInstance(),
@@ -105,9 +100,7 @@ public class GoogleCalendarOperations {
                     .build();
             try {
                 service.events().delete("primary", encodedID).execute();
-                Log.d("GoogleCalendarOperations2", "Event deleted: " + id);
             } catch (IOException e) {
-                Log.e("GoogleCalendarOperations", "Error deleting event", e);
                 e.printStackTrace();
             }
         }).start();

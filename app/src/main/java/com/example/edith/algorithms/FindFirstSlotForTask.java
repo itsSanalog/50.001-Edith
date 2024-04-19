@@ -28,7 +28,6 @@ public class FindFirstSlotForTask {
     public static List<Task> find(List<TimeSlot> availableSlots, int duration, String deadline, String taskTitle, List<CalendarEntity> calendarEntities, String description) {
         LocalDateTime deadlineLDT = LocalDateTime.parse(deadline);
         LocalDateTime now = LocalDateTime.now();
-        Log.d("GoogleCalendarOperations", "Localtime now" + now);
         if (availableSlots == null) {
             return null;
         }
@@ -40,7 +39,6 @@ public class FindFirstSlotForTask {
                     LocalDateTime availableSlotStart = LocalDateTime.parse(availableSlot.getStartTime());
                     Task task = new Task(taskTitle, availableSlot.getStartTime(), availableSlotStart.plusMinutes(duration).toString(), description, deadline);
                     rescheduledTasks.add(task);
-                    Log.d("GoogleCalendarOperations", "Task added to rescheduled tasks: " + task.getEntityTitle() + " " + task.getStartTime() + " " + task.getEndTime());
                     return rescheduledTasks;
                 }
             }
@@ -62,7 +60,6 @@ public class FindFirstSlotForTask {
         holdEntities.sort((e1, e2) -> Long.compare(e2.getDurationMinutes(), e1.getDurationMinutes()));
         boolean isPlaced = false;
         for (Task holdEntity : holdEntities) {
-            Log.d("rescheduleee" , "Entity is being rescheduled" + holdEntity.getEntityTitle());
             LocalDateTime nonTaskEntityStart = LocalDateTime.parse(holdEntity.getStartTime());
             LocalDateTime nonTaskEntityEnd = LocalDateTime.parse(holdEntity.getEndTime());
 
@@ -94,7 +91,6 @@ public class FindFirstSlotForTask {
                     break;
                 }
             }
-            Log.d("rescheduleee", "returning null 1");
             return null;
         }
         }
@@ -118,7 +114,6 @@ public class FindFirstSlotForTask {
             }
         }
 
-        Log.d("rescheduleee", "Rescheduled tasks: " + rescheduledTasks.toString());
         return rescheduledTasks;
     }
 

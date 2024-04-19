@@ -44,10 +44,7 @@ public class SchedulerController {
         // Get the existing entities from the local storage
         List<Task> existingTasks = databaseOperations.getAllTasks();
         List<CalendarEntity> existingEntities = new ArrayList<>(existingTasks);
-        Log.d("Newwwww" , "Existing Entities: " + existingEntities.toString());
         existingEntities.addAll(GoogleCalendarListener.getInstance().getAllCalendarEntities());
-        Log.d("Newwwww" , "Existing Entities: " + existingEntities.toString());
-        Log.d("Newwwww" , "Existing Entities add gcal: " + GoogleCalendarListener.getInstance().getAllCalendarEntities());
 
 
         // Use the FindAvailableSlots algorithm to find all available slots that can accommodate the task

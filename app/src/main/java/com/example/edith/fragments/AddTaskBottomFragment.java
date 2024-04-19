@@ -215,7 +215,6 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("AlgoDebug", "Add Button Clicked 1");
 
                 String taskTitle = addTaskTitle.getText().toString();
                 String taskDesc = addTaskDescription.getText().toString();
@@ -224,7 +223,6 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
                 LocalDateTime localDateTime = LocalDateTime.parse(dueDate + " " + addTaskTime.getText().toString(), formatter);
                 String taskDueDate = localDateTime.toString();
-                Log.d("GoogleCalendarOperations", "Task due date: " + taskDueDate);
 
                 // TODO: pass the fields to TaskRequest
                 addTaskRequest addTaskRequest = new addTaskRequest(taskTitle, taskDesc, taskDueDate, duration);
@@ -237,41 +235,6 @@ public class AddTaskBottomFragment extends BottomSheetDialogFragment {
                 } else {
                     // TODO: Convert strings received to Task object and send task controller
                     TaskController.addTask(addTaskRequest);
-                    Log.d("GoogleCalendarOperations", "TaskController addTask called in add fragment");
-
-//                    Map<String, Object> taskMap = new HashMap<>();
-//                    taskMap.put("taskTitle", taskTitle);
-//                    taskMap.put("taskDescription", taskDesc);
-//                    taskMap.put("taskDueDate", taskDueDate);
-//                    taskMap.put("taskStatus", 0);
-//                    taskMap.put("orderDate", orderDate);
-//
-//                    firestore.collection("tasks")
-//                            .add(taskMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<DocumentReference> task) {
-//                                    if (task.isSuccessful()) {
-//                                        Toast.makeText(context, "New Task Has Been Added", Toast.LENGTH_SHORT).show();
-//                                        // Notify RecyclerView about the data change
-//                                        MainActivity mainActivity = MainActivity.class.cast(getActivity());
-//                                        if (mainActivity != null) {
-//                                            todoList toDoListFragment = mainActivity();
-//                                            if (toDoListFragment != null) {
-//                                                toDoListFragment.getAdapter().notifyDataSetChanged();
-//                                            }
-//                                        }
-//                                        //((MainActivity) getActivity()).getToDoListFragment().getAdapter().notifyDataSetChanged();
-//                                        dismiss();
-//                                    } else {
-//                                        Toast.makeText(context, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                                    }
-//                                }
-//                            }).addOnFailureListener(new OnFailureListener() {
-//                                @Override
-//                                public void onFailure(@NonNull Exception e) {
-//                                    Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
-//                                }
-//                            });
                 }
                 dismiss();
             }

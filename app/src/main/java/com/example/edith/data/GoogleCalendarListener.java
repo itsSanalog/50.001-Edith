@@ -44,35 +44,4 @@ public class GoogleCalendarListener {
         calendarEntities.add(new CalendarEntity("Another important meeting", "2024-04-17T21:30:00", "2024-04-17T23:30:00", "Test"));
         return calendarEntities;
     }
-
-//    public List<CalendarEntity> getAllCalendarEntities() {
-//        Calendar service = new Calendar.Builder(
-//                AndroidHttp.newCompatibleTransport(),
-//                JacksonFactory.getDefaultInstance(),
-//                credential)
-//                .setApplicationName("Edith")
-//                .build();
-//
-//        // List the next 10 events from the primary calendar.
-//        Events events = null;
-//        try {
-//            events = service.events().list("primary")
-//                    .setMaxResults(10)
-//                    .setOrderBy("startTime")
-//                    .setSingleEvents(true)
-//                    .execute();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//        List<Event> items = events.getItems();
-//
-//        List<CalendarEntity> calendarEntities = new ArrayList<>();
-//        for (Event event : items) {
-//            CalendarEntity calendarEntity = new CalendarEntity(event.getSummary(), event.getStart().toString(), event.getEnd().toString(), event.getDescription(),event.getId());
-//
-//            calendarEntities.add(calendarEntity);
-//        }
-//
-//        return calendarEntities;
-//    }
 }

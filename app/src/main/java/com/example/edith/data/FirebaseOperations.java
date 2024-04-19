@@ -56,10 +56,6 @@ public class FirebaseOperations implements DatabaseOperations {
         taskDatabaseReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null){
-                    Log.d(TAG, "Error getting tasks: " + error);
-                }
-                Log.d(TAG, "Tasks: " + value);
                 countListItems(value);
                 repopulateTaskList(value);
                 Log.d(TAG, taskList.toString());
@@ -73,16 +69,8 @@ public class FirebaseOperations implements DatabaseOperations {
         eventDatabaseReference.addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                if (error != null){
-                    Log.d(TAG, "Error getting events: " + error);
-                }
-                Log.d(TAG, "Events: " + value);
                 countListItems(value);
                 repopulateEventList(value);
-                Log.d(TAG, eventList.toString());
-//                if (adapter != null){
-//                    adapter.notifyDataSetChanged();
-//                }
                 GoogleCalendarOperations.getInstance().syncCalendarEntities();
             }
         });
@@ -103,7 +91,6 @@ public class FirebaseOperations implements DatabaseOperations {
     // Count List
     private void countListItems(QuerySnapshot snapshots){
         size = snapshots.size();
-        Log.d(TAG, "Size: " + size);
     }
 
     // Repopulate list
@@ -127,9 +114,6 @@ public class FirebaseOperations implements DatabaseOperations {
 
     // GetTask
     public Task getTask(int position){
-        Log.i("TaskAdapterDB1", "test" + taskList.get(position).getEntityTitle());
-        Log.i("TaskAdapterDB2", "test" + taskList.get(position));
-
         return taskList.get(position);
     }
 
@@ -311,14 +295,6 @@ public class FirebaseOperations implements DatabaseOperations {
                 }
                 size = taskList.size();
                 Log.d(TAG, "If size taskList is not null getSize is : " + size);
-
-
-//        if (taskList == null){
-//            repopulateList(taskDatabaseReference.get().getResult());
-//            Log.d(TAG, "If size taskList == null getSize is :  " + size);
-//        }
-//        Log.d(TAG, "If size taskList is not null getSize is : " + size);
-//        return size;
             }
         });
         return size;

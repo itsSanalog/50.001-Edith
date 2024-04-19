@@ -28,8 +28,6 @@ public class TaskController {
         //Get available slot from scheduler controller
         List<Task> entitiesToBeUpdated = SchedulerController.addTaskRequest(addTaskRequest);
         //Update entities in firebase
-        //Log.d("GoogleCalendarOperations", "Entities to be updated in taskcontroller: " + entitiesToBeUpdated.size());
-
         for (Task task : entitiesToBeUpdated) {
             //Update entity in firebase
             FirebaseOperations.getInstance().addTask(task);
@@ -44,7 +42,6 @@ public class TaskController {
         String entityDescription = updateTaskRequest.getEntityDescription();
         String taskDeadline = updateTaskRequest.getTaskDeadline();
         int duration = updateTaskRequest.getDuration();
-        Log.d("DeadlineNull", "taskDueDate in taskController: " + taskDeadline);
 
         deleteTaskRequest deleteTaskRequest = new deleteTaskRequest(id);
         TaskController.deleteTask(deleteTaskRequest);
@@ -55,6 +52,5 @@ public class TaskController {
     public static void deleteTask(deleteTaskRequest deleteTaskRequest) {
         FirebaseOperations.getInstance().removeTask(deleteTaskRequest.getId());
         GoogleCalendarOperations.getInstance().deleteCalendarEntity(deleteTaskRequest.getId());
-        Log.d("TaskController", deleteTaskRequest.getId());
     }
 }

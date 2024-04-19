@@ -115,10 +115,6 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
             updateDueDateText.setText(dueDate);
             updateDeadlineTime.setText(deadlineTime);
 
-//            if (taskTitle != null && taskTitle.length() > 0){
-//                updateTaskButton.setEnabled(true);
-//                updateTaskButton.setBackgroundColor(getResources().getColor(R.color.spacegrey));
-//            }
 
         }
 
@@ -202,10 +198,8 @@ public class UpdateTaskBottomFragment extends BottomSheetDialogFragment {
                 String taskDueDate = localDateTime.toString();
 
 
-                Log.d("DeadlineNull", "taskDueDate in bottom fragment: " + taskDueDate);
                 // TODO: pass the fields to TaskRequest
                 updateTaskRequest updateTaskRequest = new updateTaskRequest(id, taskTitle, taskDescription, taskDueDate, taskDuration);
-                Log.i("UpdateTaskBottomFragment", "Task ID" + id);
                 if (id != null && finalIsUpdate){
                     // TODO: update the task by calling the Task controller passing in the fields
                     TaskController.updateTask(updateTaskRequest);

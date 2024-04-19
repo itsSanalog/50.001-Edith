@@ -45,9 +45,6 @@ public class CalendarEntity {
     }
 
 
-    public void deleteCalendarEntity() {
-        //Figure out how to delete from database
-    }
     //Getter methods to access
     public String getStartTime() {
         return timeSlot.getStartTime();
