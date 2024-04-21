@@ -5,10 +5,10 @@
 | Lim Donggeon                    | 1007068 | UI/UX Design                       
 | Vancence Ho                     | 1007239 | Front-End Development              
 | Douglas Tan                     | 1006656 | Algorithm Design                   
-| Lindero Dianthe Marithe Lumagui | 1007213 | Administrative                     
+| Lindero Dianthe Marithe Lumagui | 1007213 | Front-End Development                   
 | Andrew Foo                      | 1007209 | Back-End Development               
-| Chu Jeng Kuen                   | 1006920 | Back-End Development & Application Architecture
-| David Ling De Wei               | 1007175 | Algorithm Design                   
+| Chu Jeng Kuen                   | 1006920 | Algorithm Design
+| David Ling De Wei               | 1007175 |Back-End Development                   
 ## Background
 ### Idea Inspiration
 <div style="text-align: justify">
@@ -32,10 +32,27 @@ intake human-like natural language and be able to generate tasks required, autom
 ## System Design & Implementation
 
 ### App Architecture
+#### UML Diagram
+![UML Diagram](images/UML_edith_dark.png)
+
+#### Flowchart
+![System Flowchart](images/edith_systemDesign.jpg)
 
 ### Build Set-Up
 
 ### Design Patterns
+#### Singleton
+<div style="text-align: justify">
+This pattern restricts the instantiation of a class to a single instance. For example, the FirebaseOperations class implements the Singleton pattern. For classes interacting with databases, it's important to have a single point of interaction with the database to avoid conflicting transactions or redundant connections. A Singleton ensures that there's only one instance of FirebaseOperations throughout the application, providing a global point of access to the Firebase database.
+
+Additionally, establishing a database connection can be resource-intensive. By reusing a single instance of FirebaseOperations, the application can save resources as it doesn't need to repeatedly open and close connections to the Firebase database.
+
+</div>
+
+#### Adapter
+<div style="text-align: justify">
+The TaskAdapter class in our app implements the Adapter design pattern. The Adapter pattern is a structural design pattern that allows objects with incompatible interfaces to work together. In our context, the Adapter pattern is used to bridge the gap between data (Task model in Firestore) and UI components (Recycler view). In essence, TaskAdapter adapts the data from DatabaseOperations into a form that the RecyclerView can use to display a list of tasks.
+</div>
 
 ### APIs 
 
@@ -46,10 +63,49 @@ intake human-like natural language and be able to generate tasks required, autom
 ## 2D Component
 
 ### Data Structures & Algorithms
+<div style="text-align: justify">
+The backend of our app needs a way to store data fetched from Firestore. In our FirebaseOperations class, which is responsible for handling all operation related to firestore, we have Snapshot listeners for the “tasks” and “events” collections in our Firestore database Whenever data in these collection changes, the snapshot listeners will be triggered, and repopulates taskList and eventList that stores all updated data from Firestore. taskList and eventList are implemented with the ArrayList data structure. 
+
+As for the reasons for our choice of data structure, we decided to utilize ArrayLists is firstly because it maintains the order of tasks as they were added, which is by deadline in our case. Secondly, it also provides constant-time performance for get and set operations. Lastly it is resizable, where we do not need to create a new array to resize ourselves.
+
+Compared to a tree data structure, an ArrayList data structure is more suitable for our use case because it allows for access to elements by index. Two examples, of why accessing by index is important in our program. Firstly, the onBindViewHolder method in the RecyclerView’s Adapter requires the position of the item to bind the correct data to the ViewHolder, it calls the get(position) of the arraylist to obtain data for that position. Secondly, when an event occurs on an item, like a click event, the position of the item directly corresponds to the same index within our underlying data structure. For example, in the TaskAdapter class, when edit icon is clicked, the editTask(int position) method is called with the position of the corresponding item. This same position is used to retrieve the corresponding task from the data structure for editing.
+
+Next we chose to utilize ArrayLists over LinkedLists because ArrayLists offer better performance for operations like add, get, set, than LinkedLists. LinkedLists offer better performance for operation like add and remove only at beginning or end of the list, which is not what we need for our purposes, therefore the ArrayList data structure is the better choice.
+
+The ArrayList data structure we used in our program is a resizable array implementation of the List interface. It is part of the Java Collections Framework and resides in the java.util package.
+
+</div>
 
 ### Implementation
+<div style="text-align: justify">
+We implemented algorithms in our create,read, update and delete operations within our FirebaseOperations class. As an example we shall look at our getAllCalendarEntities method.
+
+In our getAllCalendarEntities method found in FirebaseOperation class, it retrieves all calendar entities from the Firebase database. Firstly an empty ArrayList of CalendarEntity objects named calendarEntities is created. Next the we call the get method on the taskDatabaseReference, which is a reference to the “task” collection of our firestore database, to obtain all documents in the collection. We then attached an OnSuccessListener to the get method which will trigger when the get operation is successful. Inside our OnSuccessListener, the toObjects method is called on the QuerySnapshot object returned by the get method. This method converts each document in the “tasks” collection to a Task object. This Task object is a child class of CalendarEntity that we have defined. Now these Task objects can then be added to the CalendarEntities ArrayList we created. The method will then return calendarEntitites list.
+
+Another example where we implemented algorithm is in our updateTaskStatus method also in our FirebaseOperations class. It takes in two parameters, id which is a string and status a boolean. The document method is called on taskDatabaseReference with id passed into its argument, giving us a DocumentReference to the document in the “task” collection with the given document ID. The update method is then called on the DocumentReference with the field “status” and it updates the corresponding value to the new boolean status argument passed.
+
+In both of these examples, firestore handles core data retrieval algorithms, both for fetching all documents in a collection and reading individual documents by document ID, therefore we did not have to implement our own algorithm, since Firestore libraries provided the necessary functionality.
+</div>
+
+### Sustainability
+<div style="text-align: justify">
+With our app, there is no longer the need to spend excess time navigating between many different scheduling apps. This centralization of workflow helps to reduce the number of API calls, database requests, and similar processes that cumulatively impact energy consumption.
+</div>
+
+### Diversity & Inclusion
+<div style="text-align: justify">
+Our app adapts to anyone’s schedule, regardless of contents or their ability to follow it. It strives to enable anyone to build their own individual schedules that suit their needs and preferences, and allows them to decide their priorities and how the app can and should help them.
+</div>
 
 ## Future Improvements
+<div style="text-align: justify">
+Our group will be carrying this project forward by applying for SUTD VIE’s Baby Shark Fund, and possibly into an e-capstone.
+
+We deeply resonate with the problem statement as it is a problem experienced by all of us as students. We believe this app has great potential to turn into an actual marketable product.
+
+Throughout this course, we have built a prototype and proven that the idea is feasible, and have received positive feedback during the showcase. Moving forward, we will work on improving the app interface to promote a better user experience while improving the robustness and accuracy of our algorithms.
+</div>
+
 
 ## Conclusion
 
