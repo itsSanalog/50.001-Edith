@@ -29,6 +29,10 @@ intake human-like natural language and be able to generate tasks required, autom
 </div>
 
 ## App Walkthrough
+<img src="images/appWalkthrough3.PNG">
+<img src="images/appWalkthrough4.PNG">
+<img src="images/appWalkthrough1.PNG" width="700">
+<img src="images/appWalkthrough2.PNG" width="700">
 
 ## System Design & Implementation
 
@@ -36,7 +40,7 @@ intake human-like natural language and be able to generate tasks required, autom
 #### UML Diagram
 ![UML Diagram](images/UML_edith_dark.png)
 
-#### Flowchart
+#### Application Architecture - MVC
 ![System Flowchart](images/edith_systemDesign.jpg)
 
 ### Build Set-Up
