@@ -31,8 +31,8 @@ intake human-like natural language and be able to generate tasks required, autom
 ## App Walkthrough
 <img src="images/appWalkthrough3.PNG">
 <img src="images/appWalkthrough4.PNG">
-<img src="images/appWalkthrough1.PNG" width="700">
-<img src="images/appWalkthrough2.PNG" width="700">
+<img src="images/appWalkthrough1.PNG">
+<img src="images/appWalkthrough2.PNG">
 
 ## System Design & Implementation
 
