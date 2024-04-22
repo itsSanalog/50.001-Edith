@@ -47,18 +47,112 @@ This pattern restricts the instantiation of a class to a single instance. For ex
 
 Additionally, establishing a database connection can be resource-intensive. By reusing a single instance of FirebaseOperations, the application can save resources as it doesn't need to repeatedly open and close connections to the Firebase database.
 
+##### Example Use Case: 
+```java
+// Constructor
+private FirebaseOperations(){
+    // code not shown
+}
+
+// Singleton Design Pattern
+public static FirebaseOperations getInstance(){
+    if (instance == null){
+        instance = new FirebaseOperations();
+    }
+    return instance;
+}
+```
 </div>
 
 #### Adapter
 <div style="text-align: justify">
 The TaskAdapter class in our app implements the Adapter design pattern. The Adapter pattern is a structural design pattern that allows objects with incompatible interfaces to work together. In our context, the Adapter pattern is used to bridge the gap between data (Task model in Firestore) and UI components (Recycler view). In essence, TaskAdapter adapts the data from DatabaseOperations into a form that the RecyclerView can use to display a list of tasks.
+
+#### Example Use Case:
+```java
+public TaskAdapter(Context context, DatabaseOperations db){
+    FirebaseOperations dbOperations = FirebaseOperations.getInstance();
+    dbOperations.setAdapter(this);
+    mInflater = LayoutInflater.from(conten);
+    this.context = context;
+    this.db = db;
+}
+
+@NonNull
+@Override
+public TaskViewHolder onCreateViewHolder(@Nonnull ViewGroup parent, int viewType){
+    // code not shown
+}
+
+@Override
+public void onBindViewHolder(@NonNull TaskViewHolder holder, int position){
+    // code not shown
+}
+
+@Override
+public int getItemCount(){
+    return db.getSize();
+}
+
+public static class TaskViewHolder extends RecyclerView.ViewHolder{
+    // code not shown
+}
+```
 </div>
 
 ### APIs 
 
 #### Google Authenticator
+```java
+    public static final int GOOGLE_SIGN_IN_CODE = 10005;
+    GoogleSignInOptions gso;
+    GoogleSignInClient signInClient;
+
+    gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.web_client_id)).requestEmail()
+                .requestScopes(new Scope("https://www.googleapis.com/auth/calendar"))
+                .build();
+
+    signInClient = GoogleSignIn.getClient(this, gso);
+
+    GoogleSignInAccount signInAccount = GoogleSignIn.getLastSignedInAccount(this);
+```
+
+```kotlin
+dependencies{
+    implementation("com.google.android.gms:play-services-location:21.2.")
+    implementation("com.google.android.gms:play-services-auth:21.0.0")
+}
+```
 #### Google Firebase
+```java
+    private static FirebaseOperations instance = null;
+    private FirebaseFirestore firestore;
+    private CollectionReference taskDatabaseReference;
+    private CollectionReference eventDatabaseReference;
+```
+
+```kotlin
+dependencies {
+    implementation("com.google.firebase:firebase-firestore:24.11.0")
+    implementation("com.google.firebase:firebase-auth:22.3.1")
+}
+```
 #### Google Calendar
+```java
+    private GoogleSignInAccount account;
+    private static GoogleCalendarOperations instance;
+    private GoogleAccountCredential credential;
+```
+```kotlin
+dependencies {
+    implementation("com.google.api-client:google-api-client-android:1.31.5")
+    implementation("com.google.api-client:google-api-client-gson:1.31.5")
+    implementation("com.google.apis:google-api-services-calendar:v3-rev20220715-2.0.0")
+    implementation("com.google.http-client:google-http-client-android:1.39.2")
+    implementation("com.google.http-client:google-http-client-jackson2:1.39.2")
+}
+```
 
 ## 2D Component
 
@@ -110,5 +204,3 @@ Throughout this course, we have built a prototype and proven that the idea is fe
 ## Conclusion
 
 ## References
-
-
