@@ -1,7 +1,4 @@
-<img align="left" src="images/icon-edith.png" height="80" width="80">
-
 # EDITH
-
 ## 50.001 1D Project - TEAM 42
 | Name                            | ID      | Roles                              |
 | :------------------------------ | :-----: |:-----------------------------------|
@@ -104,7 +101,6 @@ public static class TaskViewHolder extends RecyclerView.ViewHolder{
 </div>
 
 ### APIs 
-<img align="left" src="images/icons8-google-25.png" width="25" height="25" style="margin-right: 8px; margin-top: -5px">
 
 #### Google Authenticator
 ```java
@@ -128,8 +124,6 @@ dependencies{
     implementation("com.google.android.gms:play-services-auth:21.0.0")
 }
 ```
-<img align="left" src="images/icons8-firebase-25.png" width="25" height="25" style="margin-right: 8px; margin-top: -5px">
-
 #### Google Firebase
 ```java
     private static FirebaseOperations instance = null;
@@ -144,10 +138,7 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:22.3.1")
 }
 ```
-<img align="left" src="images/icons8-google-calendar.png" height="25" width="25" style="margin-right: 8px; margin-top: -5px ">
-
 #### Google Calendar
-
 ```java
     private GoogleSignInAccount account;
     private static GoogleCalendarOperations instance;
@@ -167,13 +158,13 @@ dependencies {
 
 ### Data Structures & Algorithms
 <div style="text-align: justify">
-The backend of our app needs a way to store data fetched from Firestore. In our FirebaseOperations class, which is responsible for handling all operation related to firestore, we have Snapshot listeners for the “tasks” and “events” collections in our Firestore database Whenever data in these collection changes, the snapshot listeners will be triggered, and repopulates taskList and eventList that stores all updated data from Firestore. taskList and eventList are implemented with the ArrayList data structure. 
+The backend of our app needs a way to store data fetched from Firestore. In our FirebaseOperations class, which is responsible for handling all operation related to firestore, we have Snapshot listeners for the “tasks” and “events” collections in our Firestore database Whenever data in these collections changes, the snapshot listeners will be triggered and repopulates taskList and eventList that store all updated data from Firestore. taskList and eventList are implemented with the ArrayList data structure. 
 
-As for the reasons for our choice of data structure, we decided to utilize ArrayLists is firstly because it maintains the order of tasks as they were added, which is by deadline in our case. Secondly, it also provides constant-time performance for get and set operations. Lastly it is resizable, where we do not need to create a new array to resize ourselves.
+As for the reasons for our choice of data structure, we decided to utilize ArrayLists, firstly because it maintains the order of tasks as they were added, which is by deadline in our case. Secondly, it also provides constant-time performance for get and set operations. Lastly, it is resizable, where we do not need to create a new array to resize ourselves.
 
 Compared to a tree data structure, an ArrayList data structure is more suitable for our use case because it allows for access to elements by index. Two examples, of why accessing by index is important in our program. Firstly, the onBindViewHolder method in the RecyclerView’s Adapter requires the position of the item to bind the correct data to the ViewHolder, it calls the get(position) of the arraylist to obtain data for that position. Secondly, when an event occurs on an item, like a click event, the position of the item directly corresponds to the same index within our underlying data structure. For example, in the TaskAdapter class, when edit icon is clicked, the editTask(int position) method is called with the position of the corresponding item. This same position is used to retrieve the corresponding task from the data structure for editing.
 
-Next we chose to utilize ArrayLists over LinkedLists because ArrayLists offer better performance for operations like add, get, set, than LinkedLists. LinkedLists offer better performance for operation like add and remove only at beginning or end of the list, which is not what we need for our purposes, therefore the ArrayList data structure is the better choice.
+Next, we chose to utilize ArrayLists over LinkedLists because ArrayLists offer better performance for operations like add, get, set, than LinkedLists. LinkedLists offer better performance for operation like add and remove only at beginning or end of the list, which is not what we need for our purposes, therefore the ArrayList data structure is the better choice.
 
 The ArrayList data structure we used in our program is a resizable array implementation of the List interface. It is part of the Java Collections Framework and resides in the java.util package.
 
@@ -181,13 +172,13 @@ The ArrayList data structure we used in our program is a resizable array impleme
 
 ### Implementation
 <div style="text-align: justify">
-We implemented algorithms in our create,read, update and delete operations within our FirebaseOperations class. As an example we shall look at our getAllCalendarEntities method.
+We implemented algorithms in our create, read, update and delete operations within our FirebaseOperations class. As an example, we shall look at our getAllCalendarEntities method.
 
-In our getAllCalendarEntities method found in FirebaseOperation class, it retrieves all calendar entities from the Firebase database. Firstly an empty ArrayList of CalendarEntity objects named calendarEntities is created. Next the we call the get method on the taskDatabaseReference, which is a reference to the “task” collection of our firestore database, to obtain all documents in the collection. We then attached an OnSuccessListener to the get method which will trigger when the get operation is successful. Inside our OnSuccessListener, the toObjects method is called on the QuerySnapshot object returned by the get method. This method converts each document in the “tasks” collection to a Task object. This Task object is a child class of CalendarEntity that we have defined. Now these Task objects can then be added to the CalendarEntities ArrayList we created. The method will then return calendarEntitites list.
+In our getAllCalendarEntities method found in FirebaseOperation class, it retrieves all calendar entities from the Firebase database. Firstly an empty ArrayList of CalendarEntity objects named calendarEntities is created. Next we call the get method on the taskDatabaseReference, which is a reference to the “task” collection of our firestore database, to obtain all documents in the collection. We then attached an OnSuccessListener to the get method which will trigger when the get operation is successful. Inside our OnSuccessListener, the toObjects method is called on the QuerySnapshot object returned by the get method. This method converts each document in the “tasks” collection to a Task object. This Task object is a child class of CalendarEntity that we have defined. Now these Task objects can then be added to the CalendarEntities ArrayList we created. The method will then return calendarEntitites list.
 
 Another example where we implemented algorithm is in our updateTaskStatus method also in our FirebaseOperations class. It takes in two parameters, id which is a string and status a boolean. The document method is called on taskDatabaseReference with id passed into its argument, giving us a DocumentReference to the document in the “task” collection with the given document ID. The update method is then called on the DocumentReference with the field “status” and it updates the corresponding value to the new boolean status argument passed.
 
-In both of these examples, firestore handles core data retrieval algorithms, both for fetching all documents in a collection and reading individual documents by document ID, therefore we did not have to implement our own algorithm, since Firestore libraries provided the necessary functionality.
+In both of these examples, firestore handles core data retrieval algorithms, both for fetching all documents in a collection and reading individual documents by document ID, therefore we did not have to implement our algorithm, since Firestore libraries provided the necessary functionality.
 </div>
 
 ### Sustainability
@@ -211,23 +202,5 @@ Throughout this course, we have built a prototype and proven that the idea is fe
 
 
 ## Conclusion
-<div style="text-align: justify">
-This project successfully delivered a task scheduling application that can help students manage their time more efficiently by automatically scheduling tasks into their calendar. The app utilizes modern technologies like Firebase, Google Sign-In, and the Google Calendar API to provide a seamless user experience. Principles of object-oriented programming and design patterns were employed to create a modular and maintainable system architecture. While the prototype demonstrates the core functionality, there is significant potential for further development and improvement of the app into a market-ready product.
-</div>
 
 ## References
-<img src="images/icons8-github-50.png" height="25" width="25" align="left" style="margin-right: 8px; margin-top: 5px">
-
-### GitHub Repositories
-[![github](https://img.shields.io/badge/Coding%2D-Meet-Todo%2D-App-000000?style=for-the-badge&logo=GitHub&logoColor=white)](https://github.com/Coding-Meet/Todo-App/tree/master)
-[![github](https://img.shields.io/badge/Sanath14-to%2D-do-000000?style=for-the-badge&logo=GitHub&logoColor=white)](https://github.com/Coding-Meet/Todo-App/tree/master)
-
-<img src="images/icons8-documentation-67.png" height="25" width="25" align="left" style="margin-right: 8px; margin-top: 5px">
-
-### Documentation
-[![youtube](https://img.shields.io/badge/CodingSTUFF-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=OjOn0w1TD6M&list=PLhhNsarqV6MRXyyjFRjm4Emj25KV-SSmu)
-[![medium](https://img.shields.io/badge/Florina_Muntenescu-Android_Architecture-12100E?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/upday-devs/android-architecture-patterns-part-1-model-view-controller-3baecef5f2b6)
-[![googlechrome](https://img.shields.io/badge/Singleton_Design_Pattern-FFFFFF?style=for-the-badge&logo=Google-chrome&logoColor=black)](https://sourcemaking.com/design_patterns/singleton)
-[![googlechrome](https://img.shields.io/badge/Adapter_Design_Pattern-FFFFFF?style=for-the-badge&logo=Google-chrome&logoColor=black)](https://refactoring.guru/design-patterns/adapter)
-[![googlechrome](https://img.shields.io/badge/Oracle_Documentation-FFFFFF?style=for-the-badge&logo=Google-chrome&logoColor=black)](https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html)
-
