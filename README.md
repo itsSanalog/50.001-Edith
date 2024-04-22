@@ -1,3 +1,5 @@
+<img align="left" src="images/icon-edith.png" height="80" width="80">
+
 # EDITH
 ## 50.001 1D Project - TEAM 42
 | Name                            | ID      | Roles                              |
@@ -101,6 +103,7 @@ public static class TaskViewHolder extends RecyclerView.ViewHolder{
 </div>
 
 ### APIs 
+<img src="images/icons8-google-25.png" width="25" height="25" align="left" style="margin-right: 8px; margin-top: -5px">
 
 #### Google Authenticator
 ```java
@@ -124,6 +127,8 @@ dependencies{
     implementation("com.google.android.gms:play-services-auth:21.0.0")
 }
 ```
+<img src="images/icons8-firebase-25.png" width="25" height="25" align="left" style="margin-right: 8px; margin-top: -5px">
+
 #### Google Firebase
 ```java
     private static FirebaseOperations instance = null;
@@ -138,6 +143,8 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:22.3.1")
 }
 ```
+<img src="images/icons8-google-calendar.png" width="25" height="25" align="left" style="margin-right: 8px; margin-top: -5px">
+
 #### Google Calendar
 ```java
     private GoogleSignInAccount account;
@@ -202,5 +209,8 @@ Throughout this course, we have built a prototype and proven that the idea is fe
 
 
 ## Conclusion
+<div style="text-align: justify">
+This project successfully delivered a task scheduling application that can help students manage their time more efficiently by automatically scheduling tasks into their calendar. The app utilizes modern technologies like Firebase, Google Sign-In, and the Google Calendar API to provide a seamless user experience. Principles of object-oriented programming and design patterns were employed to create a modular and maintainable system architecture. While the prototype demonstrates the core functionality, there is significant potential for further development and improvement of the app into a market-ready product.
+</div>
 
 ## References
