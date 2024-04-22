@@ -10,7 +10,8 @@
 | Lindero Dianthe Marithe Lumagui | 1007213 | Front-End Development                   
 | Andrew Foo                      | 1007209 | Back-End Development               
 | Chu Jeng Kuen                   | 1006920 | Algorithm Design
-| David Ling De Wei               | 1007175 |Back-End Development                   
+| David Ling De Wei               | 1007175 |Back-End Development                  
+
 ## Background
 ### Idea Inspiration
 <div style="text-align: justify">
@@ -27,8 +28,6 @@ Inspired by this desire, our team envisioned an app that would one day be able t
 intake human-like natural language and be able to generate tasks required, automatically scheduling it based on its priority. Harnessing the power of automation, our app aims to empower not only students but everybody to focus more on other important aspects like your passions, while minimising the hassle of manual adjustments. Thus, our idea was sparked: **EDITH** a.k.a **E**vents & **D**eadlines **I**ntelligent **T**ask **H**andler; an intuitive app designed to revolutionise time management for everybody, saving them valuable time and energy to devote to what truly matters.
 </div>
 
-### Generating Solution
-
 ## App Walkthrough
 
 ## System Design & Implementation
@@ -41,6 +40,71 @@ intake human-like natural language and be able to generate tasks required, autom
 ![System Flowchart](images/edith_systemDesign.jpg)
 
 ### Build Set-Up
+Our application is built using  concepts of Object-Oriented Programming **(OOP)**, therefore it is easily scalable and flexible. In our application, we have chose to use Firebase as an option for our database. However, it is possible to apply other database systems easily to our application just by creating a new class containing operations from your intended database, an example from our implementation is as provided: 
+
+```java
+public void getTask(String id){
+    // code not shown 
+    // attributes in table below
+}
+```
+
+| Attributes |   Type    | Requirement           |
+|:-----------|:---------:|:----------------------|
+| entityID   | `String`  | `Required`            |     
+
+
+```java
+public void addTask(Task task){
+    // code not shown
+    // attributes in table below
+}
+```
+
+| Attributes      |   Type    | Requirement           |
+|:----------------|:---------:|:----------------------|
+| entityID        | `String`  | `Required`            |     
+| entityTitle     | `String`  | `Required`            |
+| description     | `String`  | `Optional`            |
+| isCompleted     | `boolean` | `Optional`            |
+| priority        | `Integer` | `Optional`            |
+| deadline        | `String`  | `Required`            |
+| durationMinutes | `Integer` | `Required`            |
+| start_time      | `String`  | `Required`            |
+| timeSlot        | `String`  | `Required`            |
+| updateRequired  | `boolean` | `Optional`            |
+| type            | `String`  | `Required`            |
+
+```java
+public void removeTask(String id){
+    // code not shown
+    // attributes in table below
+}
+```
+| Attributes |   Type    | Requirement           |
+|:-----------|:---------:|:----------------------|
+| entityID   | `String`  | `Required`            |     
+
+```java
+public void updateTask(Task task){
+    // code not shown
+    // attributes in table below
+}
+```
+
+| Attributes      |   Type    | Requirement           |
+|:----------------|:---------:|:----------------------|
+| entityID        | `String`  | `Required`            |     
+| entityTitle     | `String`  | `Required`            |
+| description     | `String`  | `Optional`            |
+| isCompleted     | `boolean` | `Optional`            |
+| priority        | `Integer` | `Optional`            |
+| deadline        | `String`  | `Required`            |
+| durationMinutes | `Integer` | `Required`            |
+| start_time      | `String`  | `Required`            |
+| timeSlot        | `String`  | `Required`            |
+| updateRequired  | `boolean` | `Optional`            |
+| type            | `String`  | `Required`            |
 
 ### Design Patterns
 #### Singleton
