@@ -214,3 +214,17 @@ This project successfully delivered a task scheduling application that can help 
 </div>
 
 ## References
+<img src="images/icons8-github-50.png" width="25" height="25" align="left" style="margin-right: 8px; margin-top: 5px">
+
+### Github Repositories
+[![github](https://img.shields.io/badge/Coding%2D-Meet-Todo%2D-App-000000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Coding-Meet/Todo-App/tree/master)
+[![github](https://img.shields.io/badge/Sanath14-to%2d-do-000000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Coding-Meet/Todo-App/tree/master)
+
+<img src="images/icons8-documentation-67.png" width="25" height="25" align="left" style="margin-right: 8px; margin-top: 5px">
+
+### Documentation
+[![youtube](https://img.shields.io/badge/CodingSTUFF-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=OjOn0w1TD6M&list=PLhhNsarqV6MRXyyjFRjm4Emj25KV-SSmu)
+[![medium](https://img.shields.io/badge/Florina_Muntenescu-Android_Architecture-12100E?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/upday-devs/android-architecture-patterns-part-1-model-view-controller-3baecef5f2b6)
+[![googlechrome](https://img.shields.io/badge/Singleton_Design_Pattern-FFFFFF?style=for-the-badge&logo=Google-chrome&logoColor=black)](https://sourcemaking.com/design_patterns/singleton)
+[![googlechrome](https://img.shields.io/badge/Adapter_Design_Pattern-FFFFFF?style=for-the-badge&logo=Google-chrome&logoColor=black)](https://refactoring.guru/design-patterns/adapter)
+[![googlechrome](https://img.shields.io/badge/Orcale_Documentation-FFFFFF?style=for-the-badge&logo=Google-chrome&logoColor=black)](https://docs.oracle.com/javase/8/docs/api/java/util/ArrayList.html)
